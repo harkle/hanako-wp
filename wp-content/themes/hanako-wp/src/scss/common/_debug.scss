@@ -1,0 +1,58 @@
+.hanako-terminal {
+  padding: 1.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background-color: #232327;
+  color: #b9b9bb;
+
+  p,
+  pre {
+    margin-bottom: 0;
+  }
+
+  .key {
+    color: #75bfff;
+  }
+
+  .attr {
+    color: #ff7de9;
+  }
+
+  &-debug {
+    @include transition('500ms', 'transform');
+
+    position: fixed;
+    left: 0;
+    width: 100%;
+    border: 0;
+
+    &.bottom {
+      bottom: 0;
+      transform: translateY(100%);
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    &.top {
+      top: 0;
+      transform: translateY(-100%);
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    &.in {
+      transform: translateY(0);
+    }
+
+    pre {
+      max-height: 6.38rem;
+      overflow-y: scroll;
+      scrollbar-width: none;
+      -ms-overflow-style: -ms-autohiding-scrollbar;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+}

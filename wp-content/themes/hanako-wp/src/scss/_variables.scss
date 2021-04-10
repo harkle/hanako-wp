@@ -1,0 +1,18 @@
+$html-font-size: 18px;
+
+$spacings: .5, 1, 2, 2.5, 3, 4, 0;
+
+$colors: (
+  white: #fff,
+  black: #000,
+  gray: #808080,
+  primary: #f50057,
+);
+
+$breakpoints: (
+  '': 0,
+  md-: 768px,
+  lg-: 992px,
+  xl-: 1200px,
+  xxl-: 1400px,
+);
