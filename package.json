@@ -8,8 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "compile": "webpack --config webpack.config.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "webpack --config webpack.config.js"
   },
   "author": {
     "name": "Lionel Tardy",

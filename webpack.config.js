@@ -14,11 +14,14 @@ try {
   console.error('Error while deleting /dist');
 }
 
-
 let configBase = {
   mode: 'production',
   devtool: 'source-map',
   watch: true,
+  stats: "minimal",
+  performance: {
+    hints: false,
+  },
   optimization: {
     usedExports: true
   },
@@ -53,14 +56,14 @@ let configBase = {
                 }
               }
             }
-          },{
+          }, {
             loader: 'sass-loader',
             options: {
               sourceMap: true
             }
           }
         ]
-      },{
+      }, {
         test: /\.(png|jpe?g|gif|svg)$/,
         use: [
           {
@@ -73,7 +76,7 @@ let configBase = {
             }
           }
         ]
-      },{
+      }, {
         test: /\.(woff|woff2|ttf|otf|eot)$/,
         use: [
           {
@@ -92,6 +95,7 @@ let configBase = {
 };
 
 let configs = [];
+console.log('> Entry points');
 ['src/ts/', 'src/scss/'].forEach((subFolder) => {
   fs.readdirSync(basePath + subFolder).forEach(element => {
     const extension = path.extname(element);
@@ -141,16 +145,21 @@ let configs = [];
   });
 });
 
+var data = new Date();
 configs.forEach((config) => {
-  /*if (config.plugins) {
+  if (config.plugins) {
     config.plugins.push(new EventHooksPlugin({
+      'invalid': () => {
+        console.log('\r\n');
+        console.log('> webpack recompile: ' + (new Date()).toLocaleTimeString());
+      },
       'done': () => {
         fs.readdirSync(basePath + '/dist').forEach(element => {
           if (fs.lstatSync(basePath + '/dist/' + element).isFile() && element != 'index.html') fs.unlinkSync(basePath + '/dist/' + element);
         });
       }
     }));
-  }*/
+  }
 });
 
 module.exports = configs;
