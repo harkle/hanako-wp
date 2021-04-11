@@ -1,8 +1,10 @@
-@import 'variables';
-@import 'bootstrap';
+$html-font-size: 15px;
 
-@import '~hanako-scss/scss/index';
+@import 'utilities/rem';
+@import 'utilities/transitions';
+@import 'utilities/debug';
 
-@import 'common/debug';
-@import 'common/fonts';
-@import 'common/typography';
+@import 'bootstrap/custom';
+
+@import 'typography/fonts';
+@import 'typography/typography';

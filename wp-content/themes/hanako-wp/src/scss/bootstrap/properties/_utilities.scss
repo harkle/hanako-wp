@@ -1,0 +1,29 @@
+// Add
+$utilities: map-merge(
+  $utilities,
+  (
+    'color': (
+      property: color,
+      responsive: false,
+      state: hover,
+      values: $theme-colors,
+    ),
+  )
+);
+
+// Modify
+// i.e add w-10
+$utilities: map-merge(
+  $utilities,
+  (
+    'width': map-merge(
+      map-get($utilities, 'width'),
+      (
+        values: map-merge(
+          map-get(map-get($utilities, 'width'), 'values'),
+          (10: 10%),
+        ),
+      ),
+    ),
+  )
+);
