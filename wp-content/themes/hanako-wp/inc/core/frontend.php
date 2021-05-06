@@ -74,8 +74,8 @@ if (!get_abb_option('show_admin_bar')) add_filter( 'show_admin_bar', '__return_f
  * Redirect
  */
 add_action('init', function() {
-  if (!is_user_logged_in() && $GLOBALS['pagenow'] !== 'wp-login.php' && get_abb_option('hide_site')) {
-    auth_redirect();
+  if (!is_user_logged_in() && $_SERVER['REQUEST_URI'] != '/coming-soon/' && $GLOBALS['pagenow'] !== 'wp-login.php' && get_abb_option('hide_site')) {
+    wp_redirect('/coming-soon/');
     die();
   }
 });
