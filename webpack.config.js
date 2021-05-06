@@ -7,6 +7,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const EventHooksPlugin = require('event-hooks-webpack-plugin');
 
 let basePath = './wp-content/themes/hanako-wp/';
+let exclude = [/node_modules/, /wp\-content\/plugins/];
 
 try {
   fs.rmdirSync(basePath + '/dist', { recursive: true });
@@ -32,7 +33,7 @@ let configBase = {
     rules: [
       {
         test: /\.tsx?$/,
-        exclude: /node_modules/,
+        exclude: exclude,
         use: {
           loader: 'ts-loader',
           options: {
@@ -42,6 +43,7 @@ let configBase = {
       },
       {
         test: /\.(scss|css)$/,
+        exclude: exclude,
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
@@ -65,6 +67,7 @@ let configBase = {
         ]
       }, {
         test: /\.(png|jpe?g|gif|svg)$/,
+        exclude: exclude,
         use: [
           {
             loader: 'file-loader',
@@ -78,6 +81,7 @@ let configBase = {
         ]
       }, {
         test: /\.(woff|woff2|ttf|otf|eot)$/,
+        exclude: exclude,
         use: [
           {
             loader: 'file-loader',
@@ -132,11 +136,8 @@ console.log('> Entry points');
             new MiniCssExtractPlugin({
               filename: 'css/' + filename + '.min.css',
             }),
-            new HtmlWebpackPlugin({
-              template: './wp-content/themes/hanako-wp/src/index.html'
-            }),
             new CopyPlugin({
-              patterns: [{ from: 'wp-content/themes/hanako-wp/src/assets', to: 'assets' }]
+              patterns: [{ from: 'wp-content/themes/hanako-wp/src/assets/images', to: 'assets/images' }]
             })
           ]
         }
@@ -154,6 +155,7 @@ configs.forEach((config) => {
         console.log('> webpack recompile: ' + (new Date()).toLocaleTimeString());
       },
       'done': () => {
+        console.log('done');
         fs.readdirSync(basePath + '/dist').forEach(element => {
           if (fs.lstatSync(basePath + '/dist/' + element).isFile() && element != 'index.html') fs.unlinkSync(basePath + '/dist/' + element);
         });

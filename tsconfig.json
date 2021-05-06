@@ -4,5 +4,8 @@
       "target": "es2015",
       "module": "es2015",
       "moduleResolution": "Node"
-  }
+  },
+  "exclude": [
+    "./wp-content/plugins/",
+  ]
 }

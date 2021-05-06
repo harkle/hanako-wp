@@ -374,40 +374,6 @@ class MySettingsPage {
     );
 
     add_settings_section (
-      'options_vendor_main',
-      'Librairies & plugins',
-      array($this, 'print_section_info'),
-      'options_vendor'
-    );
-
-    add_settings_field (
-      'use_jquery',
-      'jQuery',
-      array( $this, 'checkbox_callback' ),
-      'options_vendor',
-      'options_vendor_main',
-       array('vendor', 'use_jquery', 'Charger jQuery (CDN)')
-    );
-
-    add_settings_field(
-      'use_bootstrap',
-      'Bootstrap',
-      array( $this, 'checkbox_callback' ),
-      'options_vendor',
-      'options_vendor_main',
-       array('vendor', 'use_bootstrap', 'Charger Bootstrap (CDN)')
-    );
-
-    add_settings_field(
-      'use_bootstrap_popper',
-      'Popper',
-      array( $this, 'checkbox_callback' ),
-      'options_vendor',
-      'options_vendor_main',
-       array('vendor', 'use_bootstrap_popper', 'Charger Popper (CDN)')
-    );
-
-    add_settings_section (
       'options_vendor_externals',
       'Ressources externes',
       array($this, 'print_section_info'),
@@ -476,12 +442,6 @@ class MySettingsPage {
         'hide_metabox' => "itsec-dashboard-widget,dashboard,side,\nrg_forms_dashboard,dashboard, side\nlinkxfndiv,link,normal\nlinkadvanceddiv,link,normal'\ndashboard_quick_press,dashboard,side\ndashboard_plugins,dashboard,side\ndashboard_incoming_links,dashboard,side\ndashboard_recent_drafts,dashboard,side\nicl_dashboard_widget,dashboard,side\ndashboard_recent_comments,dashboard,normal\ndashboard_activity,dashboard,side\nwpseo-dashboard-overview,dashboard,side\ndashboard_incoming_links,dashboard,normal\ndashboard_primary,dashboard,side\ndashboard_secondary,dashboard,side\ndashboard_right_now,dashboard,side",
         'hide_metabox_posttype' => "categorydiv,side\ncommentsdiv,side\nrevisionsdiv,side\ncryptx,advanced\nrocket_post_exclude,side",
         'hide_css' => "#wp-admin-bar-WPML_ALS img\n.user-rich-editing-wrap\n.user-admin-color-wrap\n.user-comment-shortcuts-wrap\n.user-admin-bar-front-wrap\n.user-language-wrap\n.user-url-wrap\n.user-googleplus-wrap\n.user-twitter-wrap\n.user-facebook-wrap\n.user-description-wrap\n.setting[data-setting=\"description\"]\n.setting[data-setting=\"alt\"]\n.misc-pub-revisions\n#tagsdiv-client"
-      ));
-
-      update_option('abb_options_vendor', array(
-        'use_jquery' => true,
-        'use_bootstrap' => true,
-        'use_bootstrap_popper' => false
       ));
     }
   }

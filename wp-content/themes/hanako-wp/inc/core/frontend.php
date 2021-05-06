@@ -40,13 +40,9 @@ Timber::$autoescape = false;
 /*
  * Include
  */
-if (get_abb_option('use_jquery')) $abb_scripts[] = array('jquery', 'https://code.jquery.com/jquery-3.5.1.min.js', false);
-if (get_abb_option('use_bootstrap')) $abb_styles[] = array('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css');
-if (get_abb_option('use_bootstrap_popper')) $abb_scripts[] = array('bootstrap-popper', 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js');
-if (get_abb_option('use_bootstrap')) $abb_scripts[] = array('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js');
     
-$abb_styles[] = array('abb-styles', get_bloginfo('template_directory') . '/dist/bundle.css', false);
-$abb_scripts[] = array('abb-scripts', get_bloginfo('template_directory') . '/dist/bundle.js');
+$abb_styles[] = array('abb-styles', get_bloginfo('template_directory') . '/dist/css/style.min.css', false);
+$abb_scripts[] = array('abb-scripts', get_bloginfo('template_directory') . '/dist/js/site.min.js');
 
 $i = 0;
 $externals_scripts = explode("\n", get_abb_option('externals_scripts'));
