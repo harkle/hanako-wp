@@ -28,6 +28,7 @@ function get_abb_option($key) {
   return (isset($abb_options[$key])) ? $abb_options[$key] : false;
 }
 
+include_once('acf.php');
 include_once('panel.php');
 include_once('frontend.php');
 include_once('backend.php');
