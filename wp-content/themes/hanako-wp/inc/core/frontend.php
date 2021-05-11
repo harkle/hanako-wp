@@ -29,7 +29,9 @@ if (get_abb_option('debug')) {
  * Default menu
  */
 add_filter('timber/context', function ($context) {
-  $context['menu'] = new \Timber\Menu('menu');
+  $context['menus'] = [
+    new \Timber\Menu('main')
+  ];
 
   return $context;
 });
