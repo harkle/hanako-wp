@@ -1,9 +1,10 @@
-// Add
+// Replace
 $utilities: map-merge(
   $utilities,
   (
-    'hover': (
+    'color': (
       property: color,
+      class: color,
       responsive: false,
       state: hover,
       values: $theme-colors,
