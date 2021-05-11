@@ -30,7 +30,7 @@ if (get_abb_option('debug')) {
  */
 add_filter('timber/context', function ($context) {
   $context['menus'] = [
-    new \Timber\Menu('main')
+    'main' => new \Timber\Menu('main')
   ];
 
   return $context;
