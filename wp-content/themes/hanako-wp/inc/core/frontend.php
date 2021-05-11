@@ -34,7 +34,7 @@ add_filter('timber/context', function ($context) {
   return $context;
 });
 
-Timber::$dirname = ['views'];
+Timber::$dirname = ['views', 'components'];
 Timber::$autoescape = false;
 
 /*

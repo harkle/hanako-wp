@@ -1,4 +1,4 @@
-import { Debug } from '../components/Debug';
+import { Debug } from '../../components/Debug';
 import { $ } from 'hanako-ts/dist-legacy/Framework';
 
 (new Debug()).init();
