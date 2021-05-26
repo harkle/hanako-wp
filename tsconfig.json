@@ -6,6 +6,6 @@
       "moduleResolution": "Node"
   },
   "exclude": [
-    "./wp-content/plugins/",
+    "./vendor/",
   ]
 }

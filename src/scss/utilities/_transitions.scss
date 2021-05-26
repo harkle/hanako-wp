@@ -1,0 +1,7 @@
+@mixin hw-transition($speed: '500ms', $properties: 'all', $easing: cubic-bezier(.23, 1, .32, 1)) {
+  transition: #{$properties} #{$speed} #{$easing};
+}
+
+@mixin hw-no-transition() {
+  transition: none;
+}
