@@ -43,7 +43,7 @@ add_action('login_head', function () {
 /*
  * Enable editor style menus
  */
-add_editor_style('css/editor-style.css');
+add_editor_style('dist/css/editor-style.min.css');
 
 /*
  * Message on the dashboard

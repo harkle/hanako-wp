@@ -9,4 +9,12 @@ $html-font-size: 15px;
 @import 'typography/fonts';
 @import 'typography/typography';
 
-@import '_components';
+@import 'structure';
+
+//@import '../../wpml/templates/language-switchers/clean/style';
+
+//@import 'modules/xyz';
+
+//@import 'pages/xyz';
+
+@import 'components';

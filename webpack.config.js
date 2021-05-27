@@ -7,7 +7,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const EventHooksPlugin = require('event-hooks-webpack-plugin');
 
 let basePath = './';
-let exclude = [/node_modules/, /wp\-content\/plugins/];
+let exclude = [];
 
 try {
   fs.rmdirSync(basePath + 'dist', { recursive: true });
