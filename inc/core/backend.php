@@ -8,9 +8,34 @@ if (!defined('WP_AUTO_UPDATE_CORE')) {
   });
 }
 
-add_filter('big_image_size_threshold', function() {
-  return 4032;
-});
+/*
+ * image modification
+ */
+update_option('thumbnail_size_w', 0);
+update_option('thumbnail_size_h', 0);
+update_option('thumbnail_crop', 1);
+
+update_option('medium_size_w', 0);
+update_option('medium_size_h', 0);
+
+update_option('large_size_w', 0);
+update_option('large_size_h', 0);
+
+set_post_thumbnail_size(0, 0);
+
+add_filter('jpeg_quality', create_function('', 'return 100;'));
+
+add_filter('big_image_size_threshold', '__return_false');
+
+add_filter('timmy/generate_srcset_sizes', '__return_true');
+
+if (get_abb_option('image_sizes')) {
+  add_filter('timmy/sizes', function ($sizes) {
+    $options_sizes = json_decode(get_abb_option('image_sizes'), true);
+
+    return (is_array($options_sizes)) ? $options_sizes : [];
+  });
+}
 
 /*
  * Add editor the privilege to edit theme
@@ -209,27 +234,6 @@ if (get_abb_option('post_types')) {
  * ACF option page
  */
 if (get_abb_option('add_acf_options')) acf_add_options_page();
-
-/*
-  * Images stuff
-  */
-if (!get_option('medium_crop') && get_abb_option('activate_medium_crop')) {
-  add_option('medium_crop', '1');
-  update_option('medium_crop', '1');
-} else if (get_abb_option('activate_medium_crop')) {
-  update_option('medium_crop', '1');
-} else {
-  update_option('medium_crop', '0');
-}
-
-if (!get_option('large_crop') && get_abb_option('activate_large_crop')) {
-  add_option('large_crop', '1');
-  update_option('large_crop', '1');
-} else if (get_abb_option('activate_large_crop')) {
-  update_option('large_crop', '1');
-} else {
-  update_option('large_crop', '0');
-}
 
 /*
  * remove screen options

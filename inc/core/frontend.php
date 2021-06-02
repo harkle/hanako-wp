@@ -3,22 +3,25 @@
  * Timber
  */
 if (!class_exists('Timber')) {
-  add_action('admin_notices', function() {
-    echo '<div class="error"><p>Timber not activated. Make sure you activate the plugin in <a href="' . esc_url( admin_url( 'plugins.php#timber' ) ) . '">' . esc_url( admin_url( 'plugins.php' ) ) . '</a></p></div>';
+  add_action('admin_notices', function () {
+    echo '<div class="error"><p>Timber not activated. Make sure you activate the plugin in <a href="' . esc_url(admin_url('plugins.php#timber')) . '">' . esc_url(admin_url('plugins.php')) . '</a></p></div>';
   });
 
-  add_filter('template_include', function( $template ) {
+  add_filter('template_include', function ($template) {
     return get_stylesheet_directory() . '/no-timber.html';
   });
 
   return;
+} else {
+  Timber::$dirname = ['views', 'components'];
+  Timber::$autoescape = false;
 }
 
 /*
  * Debug
  */
 if (get_abb_option('debug')) {
-  add_filter('body_class', function($classes) {
+  add_filter('body_class', function ($classes) {
     $classes[] =  'debug';
 
     return $classes;
@@ -36,13 +39,20 @@ add_filter('timber/context', function ($context) {
   return $context;
 });
 
-Timber::$dirname = ['views', 'components'];
-Timber::$autoescape = false;
+if (!class_exists('Timmy\Timmy')) {
+  add_action('admin_notices', function () {
+    echo '<div class="error"><p>Timmy not activated. Make sure you activate the plugin in <a href="' . esc_url(admin_url('plugins.php#timber')) . '">' . esc_url(admin_url('plugins.php')) . '</a></p></div>';
+  });
+
+  return;
+} else {
+  new Timmy\Timmy();
+}
 
 /*
  * Include
  */
-    
+
 $abb_styles[] = array('abb-styles', get_bloginfo('template_directory') . '/dist/css/style.min.css', false);
 $abb_scripts[] = array('abb-scripts', get_bloginfo('template_directory') . '/dist/js/site.min.js');
 
@@ -70,14 +80,14 @@ if (is_array($externals_css)) {
 /*
  * Disable the Admin Bar
  */
-if (!get_abb_option('show_admin_bar')) add_filter( 'show_admin_bar', '__return_false' );
+if (!get_abb_option('show_admin_bar')) add_filter('show_admin_bar', '__return_false');
 
 /*
  * Redirect
  */
-add_action('init', function() {
-  if (!is_user_logged_in() && $_SERVER['REQUEST_URI'] != '/coming-soon/' && $GLOBALS['pagenow'] !== 'wp-login.php' && get_abb_option('hide_site')) {
-    wp_redirect('/coming-soon/');
+add_action('init', function () {
+  if (!is_user_logged_in() && $_SERVER['REQUEST_URI'] != '/de/jahreszeit/jahreszeit-2021/' && $_SERVER['REQUEST_URI'] != '/saison/saison-2021/' && $GLOBALS['pagenow'] !== 'wp-login.php' && get_abb_option('hide_site')) {
+    wp_redirect('/saison/saison-2021/');
     die();
   }
 });
@@ -94,9 +104,9 @@ function twig_asset($file) {
   return get_bloginfo('template_directory') . '/dist/assets/' . $file;
 }
 
-add_filter('timber/twig', function($twig) {
+add_filter('timber/twig', function ($twig) {
   // Adding a function.
-  $twig->addFunction( new Timber\Twig_Function('asset', 'twig_asset'));
-    
+  $twig->addFunction(new Timber\Twig_Function('asset', 'twig_asset'));
+
   return $twig;
 });
