@@ -1,9 +1,11 @@
 <?php
 include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 
+/*
+ * Notice the remind wp-config edition is needed
+ */
 if (!defined('WP_AUTO_UPDATE_CORE')) {
   add_action('admin_notices', function () {
-
     echo '<div class="error notice"><p>' . __('Merci d\'ajouter l\'instruction suivant au fichier wp-config.php.<pre>define(\'WP_AUTO_UPDATE_CORE\', false);</pre>', 'abb') . '</p></div>';
   });
 }

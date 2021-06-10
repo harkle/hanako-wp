@@ -1,6 +1,10 @@
-import { Debug } from '../../components/Debug';
-import { Empty } from '../../components/Empty';
-import { Menu } from '../../components/Menu';
+import { Debug } from '../../interface/components/Debug';
+import { Empty } from '../../interface/components/Empty';
+import { Menu } from '../../interface/components/Menu';
+import { ModuleDemo } from '../../interface/modules/demo';
+import { Page } from '../../interface/pages/defaults/page';
 (new Debug()).init();
 (new Empty()).init();
 (new Menu()).init();
+(new ModuleDemo()).init();
+(new Page()).init();

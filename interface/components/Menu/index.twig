@@ -1,0 +1,7 @@
+<menu id="main-menu" class="fixed-top vh-100 m-0 p-1 bg-white">
+  {% for item in menus.main.items %}
+    <a href="{{ item.link }}" class="d-block color-black hover-primary {{ item.classes|join(' ') }}">{{ item.title }}</a>
+  {% endfor %}
+
+  <!-- {% do action('icl_language_selector') %} -->
+</menu>

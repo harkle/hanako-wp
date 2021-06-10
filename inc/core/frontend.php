@@ -2,18 +2,19 @@
 /*
  * Timber
  */
+global $installNotices;
+$installNotices = [];
 if (!class_exists('Timber')) {
-  add_action('admin_notices', function () {
-    echo '<div class="error"><p>Timber not activated. Make sure you activate the plugin in <a href="' . esc_url(admin_url('plugins.php#timber')) . '">' . esc_url(admin_url('plugins.php')) . '</a></p></div>';
-  });
+  $installNotices[] = [
+    'url' => esc_url(admin_url('/plugin-install.php?s=Timber&tab=search&type=term')),
+    'title' => 'Timber'
+  ];
 
   add_filter('template_include', function ($template) {
     return get_stylesheet_directory() . '/no-timber.html';
   });
-
-  return;
 } else {
-  Timber::$dirname = ['views', 'components'];
+  Timber::$dirname = ['interface'];
   Timber::$autoescape = false;
 }
 
@@ -40,9 +41,10 @@ add_filter('timber/context', function ($context) {
 });
 
 if (!class_exists('Timmy\Timmy')) {
-  add_action('admin_notices', function () {
-    echo '<div class="error"><p>Timmy not activated. Make sure you activate the plugin in <a href="' . esc_url(admin_url('plugins.php#timber')) . '">' . esc_url(admin_url('plugins.php')) . '</a></p></div>';
-  });
+  $installNotices[] = [
+    'external_url' => 'https://github.com/mindkomm/timmy/releases',
+    'title' => 'Timmy'
+  ];
 
   return;
 } else {

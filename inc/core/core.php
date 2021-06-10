@@ -77,4 +77,24 @@ add_action('wp_enqueue_scripts', function () {
 add_action('wp_footer', function() {
   wp_dequeue_script('wp-embed');
 });
+
+/*
+ * Install noticies
+ */
+add_action('admin_notices', function () {
+  global $installNotices;
+
+  if (empty($installNotices)) return;
+
+  echo '<div class="notice notice-warning"><p>Attention certaines extensions requises sont manquantes.</p><ul>';
+  
+  foreach ($installNotices as $installNotice) {
+    $url = ($installNotice['url']) ? $installNotice['url'] : $installNotice['external_url'];
+    $target = (!empty($installNotice['external_url'])) ? 'target="_blank"' : '';
+    echo '<li><a href="' . $url . '" '.$target.'>' . $installNotice['title'] . '</a></li>';
+  }
+
+  echo '</ul></div>';
+});
+
 ?>

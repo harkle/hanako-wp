@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -8,45 +8,6 @@ const EventHooksPlugin = require('event-hooks-webpack-plugin');
 
 let basePath = './';
 let exclude = [];
-
-try {
-  fs.rmdirSync(basePath + 'dist', { recursive: true });
-} catch (err) {
-  console.error('Error while deleting /dist');
-}
-
-/* Auto include components */
-let includes = {
-  'scss': [],
-  'ts': []
-}
-
-fs.readdirSync(basePath + 'components/').forEach(componentFolder => {
-  if (fs.existsSync(basePath  + 'components/' + componentFolder + '/index.scss')) {
-    includes.scss.push(componentFolder);
-  }
-
-  if (fs.existsSync(basePath  + 'components/' + componentFolder + '/index.ts')) {
-    includes.ts.push(componentFolder);
-  }
-});
-
-let scssCode = '';
-includes.scss.forEach(component => {
-  scssCode += '@import \'../../components/' + component + '/index.scss\';\n';
-});
-
-fs.writeFile(basePath + '/src/scss/_components.scss', scssCode, function (err) {});
-
-
-let tsImportsCode = '';
-let tsInitCode = '';
-includes.ts.forEach(component => {
-  tsImportsCode += 'import { ' + component + ' } from \'../../components/' + component + '\';\n';
-  tsInitCode += '(new ' + component + '()).init();\n';
-});
-
-fs.writeFile(basePath + '/src/ts/site.ts', tsImportsCode + tsInitCode, function (err) {});
 
 let configBase = {
   mode: 'production',
@@ -179,16 +140,19 @@ console.log('> Entry points');
   });
 });
 
-var data = new Date();
+var invalidationDate = new Date();
 configs.forEach((config) => {
   if (config.plugins) {
     config.plugins.push(new EventHooksPlugin({
       'invalid': () => {
         console.log('\r\n');
-        console.log('> webpack recompile: ' + (new Date()).toLocaleTimeString());
+        invalidationDate = new Date();
+        console.log('> webpack recompile: ' + invalidationDate.toLocaleTimeString());
       },
       'done': () => {
-        console.log('done');
+        let date = new Date();
+        let timeDifference = date.getTime() - invalidationDate.getTime();
+        console.log('> compiled in: ' + timeDifference + 'ms');
         fs.readdirSync(basePath + 'dist/').forEach(element => {
           if (fs.lstatSync(basePath + 'dist/' + element).isFile() && element != 'index.html') fs.unlinkSync(basePath + 'dist/' + element);
         });
