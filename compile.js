@@ -25,7 +25,6 @@ function buildImports() {
     'views/twig/pages/archives/',
     'views/twig/pages/root/',
     'views/twig/pages/singles/',
-    'views/twig/pages/templates/',
     'views/twig/partials/',
   ]
 

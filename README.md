@@ -11,6 +11,10 @@ A basic wordpress template based on Timber/Twig and Hanako ts framework.
 
 Last release 11.06.2021
 
+### 1.4.1
+
+- Bugfix in compile script
+
 ### 1.4.0
 
 - Directory structure refactoring (again). The system now use a "MVC" inspired structure.
