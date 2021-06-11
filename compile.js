@@ -2,29 +2,31 @@ const fs = require('fs');
 const chokidar = require('chokidar');
 const webpack = require('webpack');
 const webpackConfig = require('./webpack.config.js');
+const basePath = './';
+
+let isCompilerStarted = false;
+let changeDebounce;
 
 try {
   fs.rmdirSync(basePath + 'dist', { recursive: true });
 } catch (err) {
-  console.error('Error while deleting /dist');
+  console.error('> Error while deleting dist/');
 }
 
 function buildImports() {
-  console.log('> Refresh module list');
-
   let includes = {
     'scss': [],
     'ts': []
   }
 
   let paths = [
-    'interface/components/',
-    'interface/modules/',
-    'interface/pages/archives/',
-    'interface/pages/defaults/',
-    'interface/pages/singles/',
-    'interface/pages/templates/',
-    'interface/partials/',
+    'views/twig/components/',
+    'views/twig/modules/',
+    'views/twig/pages/archives/',
+    'views/twig/pages/root/',
+    'views/twig/pages/singles/',
+    'views/twig/pages/templates/',
+    'views/twig/partials/',
   ]
 
   const regex = /(export class )([A-Za-z]+)( extends)/;
@@ -52,7 +54,7 @@ function buildImports() {
     scssCode += '@import \'../../' + component.path + '/index.scss\';\n';
   });
 
-  fs.writeFile(basePath + '/src/scss/_components.scss', scssCode, function (err) { });
+  fs.writeFile(basePath + '/views/scss/_components.scss', scssCode, function (err) { });
 
   let tsImportsCode = '';
   let tsInitCode = '';
@@ -61,31 +63,45 @@ function buildImports() {
     tsInitCode += '(new ' + component.className + '()).init();\n';
   });
 
-  fs.writeFile(basePath + '/src/ts/site.ts', tsImportsCode + tsInitCode, function (err) { });
+  fs.writeFile(basePath + '/views/ts/site.ts', tsImportsCode + tsInitCode, function (err) { });
+
+  startCompiler();
 }
 
-let basePath = './';
+function startCompiler() {
+  if (isCompilerStarted) return;
 
-const watcher = chokidar.watch('interface', {
-  ignored: /.twig/,
+  const compiler = webpack(webpackConfig);
+
+  compiler.watch({}, (err, stats) => {
+    if (err) console.log(err);
+    if (stats) console.log(stats.toString('minimal'));
+  });
+
+}
+
+function requestCompile(delay, path) {
+  clearTimeout(changeDebounce);
+  changeDebounce = setTimeout(() => {
+    console.log(path);
+    console.log('> Refresh module list' + ((path) ? ' (' + path +')' : ''));
+
+    buildImports();
+  }, delay);
+}
+
+const watcher = chokidar.watch('views', {
+  ignored: ['*.twig', '*.svg', '*.jpg', '*.png', '*.woff', '*.woff2', '*.otf', '*.ttf'],
   persistent: true
 });
 
-let changeDebounce;
-
-watcher.on('add', () => {
-  clearTimeout(changeDebounce);
-  changeDebounce = setTimeout(buildImports, 30000);
+watcher.on('add', (event, path) => {
+  requestCompile(30000, event);
 });
 
-watcher.on('unlink', () => {
-  clearTimeout(changeDebounce);
-  changeDebounce = setTimeout(buildImports, 1000);
+watcher.on('unlink', (event, path) => {
+  requestCompile(2500, event);
 });
 
-const compiler = webpack(webpackConfig);
+requestCompile(0, '');
 
-compiler.watch({}, (err, stats) => {
-  if (err) console.log(err);
-  console.log(stats.toString('minimal'));
-});

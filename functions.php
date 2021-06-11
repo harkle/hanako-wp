@@ -1,2 +1,2 @@
 <?php
-include_once('inc/functions.php');
+include_once('functions/index.php');

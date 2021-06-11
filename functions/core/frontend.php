@@ -14,7 +14,7 @@ if (!class_exists('Timber')) {
     return get_stylesheet_directory() . '/no-timber.html';
   });
 } else {
-  Timber::$dirname = ['interface'];
+  Timber::$dirname = ['views/twig'];
   Timber::$autoescape = false;
 }
 
@@ -112,3 +112,20 @@ add_filter('timber/twig', function ($twig) {
 
   return $twig;
 });
+
+/*
+ * Fetch templates from models/subfolder
+ */
+$templateTypes = ['index', '404', 'archive', 'author', 'category', 'tag', 'taxonomy', 'date', 'embed', 'home', 'frontpage', 'privacypolicy', 'page', 'paged', 'search', 'single', 'singular', 'attachment'];
+
+foreach ($templateTypes as $templateType) {
+  add_filter($templateType . '_template_hierarchy', function($templates) {
+    foreach($templates as &$template) {
+      if (strpos($template, 'odels/') != 1) {
+        $template = 'models/' . $template;
+      }
+    }
+
+    return $templates;
+  });
+}

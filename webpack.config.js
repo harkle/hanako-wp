@@ -94,7 +94,7 @@ let configBase = {
 
 let configs = [];
 console.log('> Entry points');
-['src/ts/', 'src/scss/'].forEach((subFolder) => {
+['views/ts/', 'views/scss/'].forEach((subFolder) => {
   fs.readdirSync(basePath + subFolder).forEach(element => {
     const extension = path.extname(element);
     const filename = element.replace(extension, '');
@@ -131,7 +131,7 @@ console.log('> Entry points');
               filename: 'css/' + filename + '.min.css',
             }),
             new CopyPlugin({
-              patterns: [{ from: 'src/assets/images', to: 'assets/images' }]
+              patterns: [{ from: 'views/assets/images', to: 'assets/images' }]
             })
           ]
         }
@@ -153,9 +153,12 @@ configs.forEach((config) => {
         let date = new Date();
         let timeDifference = date.getTime() - invalidationDate.getTime();
         console.log('> compiled in: ' + timeDifference + 'ms');
-        fs.readdirSync(basePath + 'dist/').forEach(element => {
-          if (fs.lstatSync(basePath + 'dist/' + element).isFile() && element != 'index.html') fs.unlinkSync(basePath + 'dist/' + element);
-        });
+        try {
+          fs.readdirSync(basePath + 'dist/').forEach(element => {
+            if (fs.lstatSync(basePath + 'dist/' + element).isFile() && element != 'index.html') fs.unlinkSync(basePath + 'dist/' + element);
+          });
+        } catch (err) {
+        }
       }
     }));
   }
