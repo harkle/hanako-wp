@@ -86,7 +86,7 @@ add_action('admin_notices', function () {
 
   if (empty($installNotices)) return;
 
-  echo '<div class="notice notice-warning"><p>Attention certaines extensions requises sont manquantes.</p><ul>';
+  echo '<div class="notice notice-warning"><p>Warning some mandatory plugins are missing.</p><ul>';
   
   foreach ($installNotices as $installNotice) {
     $url = ($installNotice['url']) ? $installNotice['url'] : $installNotice['external_url'];

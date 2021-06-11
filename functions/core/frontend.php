@@ -133,3 +133,10 @@ foreach ($templateTypes as $templateType) {
     return $templates;
   });
 }
+
+/*
+ * Load translations
+ */
+add_action('after_setup_theme', function() {
+  load_theme_textdomain('hw-theme', get_template_directory() . '/languages');
+});

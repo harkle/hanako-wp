@@ -1,0 +1,18 @@
+<div id="ab-rgpb-consent" class="fixed-bottom d-none" class="ab-pop-up-wrapper">
+  <div id="ab-rgpb-consent-introduction">
+    <p>
+      {{ _e('This site uses cookies to analyse traffic', 'hw-theme') }}
+      (<a class="ab-grpd-link" href="{{ function('get_privacy_policy_url') }}">{{ __('More information', 'hw-theme') }}</a>).
+      {{ _e('Please let us know if you agree to these cookies', 'hw-theme') }}: 
+      <a id="ab-rgpd-btn-agree" class="ab-grpd-link" href="#">{{ __('Agree', 'hw-theme') }}</a>
+      <a id="ab-rgpd-btn-configure" class="ab-grpd-link" href="#">{{ __('Configure', 'hw-theme') }}</a>
+    </p>
+  </div>
+  <div id="ab-rgpb-consent-details" class="d-none">
+    {{ function('do_shortcode', '[matomo_opt_out language=fr]') }}
+    <p>
+      <a id="ab-rgpd-btn-back" class="ab-grpd-link" href="#">{{ __('Back', 'hw-theme') }}</a>
+    </p>
+  </div>
+  <a href="#" id="ab-rgpb-close" class="position-absolute">×</span>
+</div>

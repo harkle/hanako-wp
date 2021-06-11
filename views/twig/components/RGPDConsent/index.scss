@@ -1,0 +1,26 @@
+#ab-rgpb-consent {
+  z-index: 1000000 !important;
+  padding: 10px;
+  background-color: $light;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: .75rem;
+  text-align: center;
+
+  #ab-rgpb-close {
+    top: calc(50% - 2px);
+    right: 15px;
+    transform: translateY(-50%);
+    color: $dark;
+    text-decoration: none;
+  }
+
+  .ab-grpd-link {
+    color: $dark;
+    text-decoration: underline !important;
+  }
+
+  p {
+    margin: 0;
+    color: $dark;
+  }
+}
