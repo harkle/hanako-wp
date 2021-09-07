@@ -1,5 +1,6 @@
-$primary:       $blue;
-$secondary:     $gray-600;
+$primary:     #6393b4;
+$secondary:   #f0646e;
+$gray:        #f4f4f3;
 
 $theme-colors: (
   'primary':    $primary,
@@ -8,8 +9,22 @@ $theme-colors: (
   'info':       $info,
   'warning':    $warning,
   'danger':     $danger,
-  'light':      $light,
-  'dark':       $dark
+  'gray':       $gray,
+  'black':      $black,
+  'white':      $white,
 );
 
 $theme-colors-rgb: map-loop($theme-colors, to-rgb, '$value');
+
+$utilities-colors: map-merge(
+  $theme-colors-rgb,
+  (
+    'black': to-rgb($black),
+    'white': to-rgb($white),
+    'body':  to-rgb($body-color)
+  )
+);
+
+$utilities-text-colors: map-loop($utilities-colors, rgba-css-var, '$key', 'text');
+
+$utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, '$key', 'bg');
