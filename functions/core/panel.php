@@ -145,15 +145,6 @@ class MySettingsPage {
     );
 
     add_settings_field(
-      'hide_site',
-      'Visibilité du site',
-      array($this, 'checkbox_callback'),
-      'options_frontend',
-      'options_frontend_main',
-      array('frontend', 'hide_site', 'Masquer le site aux utilisateurs non connectés.')
-    );
-
-    add_settings_field(
       'show_admin_bar',
       'Barre d\'administration',
       array($this, 'checkbox_callback'),
@@ -167,9 +158,53 @@ class MySettingsPage {
       'Mode debug',
       array($this, 'checkbox_callback'),
       'options_frontend',
-      'options_frontend_debug',
+      'options_frontend_main',
       array('frontend', 'debug', 'Activer le mode debug <small>(Ajoute la classe "debug" au tag body)</small>')
     );
+
+    add_settings_section(
+      'options_frontend_visibility',
+      'Redirection',
+      array($this, 'print_section_info'),
+      'options_frontend'
+    );
+
+    add_settings_field(
+      'hide_site',
+      'Visibilité du site',
+      array($this, 'checkbox_callback'),
+      'options_frontend',
+      'options_frontend_visibility',
+      array('frontend', 'hide_site', 'Masquer le site aux utilisateurs non connectés.')
+    );
+    
+    add_settings_field(
+      'redirect_to',
+      'Redirection',
+      array($this, 'text_callback'),
+      'options_frontend',
+      'options_frontend_visibility',
+      array('frontend', 'redirect_to', '')
+    );
+
+    add_settings_field(
+      'allowed_urls',
+      'Adresses autorisées',
+      array($this, 'text_callback'),
+      'options_frontend',
+      'options_frontend_visibility',
+      array('frontend', 'allowed_urls', 'Séparer les urls par des virgules')
+    );
+
+    add_settings_field(
+      'debug',
+      'Mode debug',
+      array($this, 'checkbox_callback'),
+      'options_frontend',
+      'options_frontend_main',
+      array('frontend', 'debug', 'Activer le mode debug <small>(Ajoute la classe "debug" au tag body)</small>')
+    );
+
 
     //backend
     register_setting(
@@ -431,7 +466,9 @@ class MySettingsPage {
       update_option('abb_options_set', true);
 
       update_option('abb_options_frontend', array(
-        'hide_site' => true
+        'hide_site' => true,
+        'allowed_urls' => '/wp-admin/',
+        'redirect_to' => '/wp-admin/'
       ));
 
       update_option('abb_options_timmy', array(

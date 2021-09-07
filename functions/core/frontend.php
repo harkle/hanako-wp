@@ -88,9 +88,13 @@ if (!get_abb_option('show_admin_bar')) add_filter('show_admin_bar', '__return_fa
  * Redirect
  */
 add_action('init', function () {
-  if (!is_user_logged_in() && $_SERVER['REQUEST_URI'] != '/de/jahreszeit/jahreszeit-2021/' && $_SERVER['REQUEST_URI'] != '/saison/saison-2021/' && $GLOBALS['pagenow'] !== 'wp-login.php' && get_abb_option('hide_site')) {
-    wp_redirect('/saison/saison-2021/');
-    die();
+  if (!is_user_logged_in() && get_abb_option('hide_site') && $GLOBALS['pagenow'] !== 'wp-login.php') {
+    $allowed_urls = explode(',', get_abb_option('allowed_urls'));
+  
+    if (!in_array($_SERVER['REQUEST_URI'], $allowed_urls) && $_SERVER['REQUEST_URI'] != get_abb_option('redirect_to')) {
+      wp_redirect(get_abb_option('redirect_to'));
+      die();
+    }
   }
 });
 
@@ -129,3 +133,10 @@ foreach ($templateTypes as $templateType) {
     return $templates;
   });
 }
+
+/*
+ * Load translations
+ */
+add_action('after_setup_theme', function() {
+  load_theme_textdomain('hw-theme', get_template_directory() . '/languages');
+});

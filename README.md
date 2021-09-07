@@ -3,13 +3,24 @@ A basic wordpress template based on Timber/Twig and Hanako ts framework.
 
 ## ideas
 
-- For non logged users: custom redirect or login redirect
-- Integrate RGPD banner (Matomo consent + ABB plugins)
 - ...
 
 ## Version
 
 Last release 11.06.2021
+
+### 1.4.3
+
+- RGPD consent
+- Translation files
+
+### 1.4.2
+
+- Enhenced redirection system for non logged user
+
+### 1.4.1
+
+- Bugfix in compile script
 
 ### 1.4.0
 
