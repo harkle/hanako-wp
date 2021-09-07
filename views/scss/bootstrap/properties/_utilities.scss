@@ -4,7 +4,7 @@ $utilities: map-merge(
   (
     'color': (
       property: color,
-      class: color,
+      class: text,
       responsive: false,
       state: hover,
       values: $theme-colors,

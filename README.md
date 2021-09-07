@@ -7,7 +7,11 @@ A basic wordpress template based on Timber/Twig and Hanako ts framework.
 
 ## Version
 
-Last release 11.06.2021
+Last release 07.09.2021
+
+### 1.4.4
+
+- Update to Boostrap 5.1
 
 ### 1.4.3
 
