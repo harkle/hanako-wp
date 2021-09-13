@@ -39,7 +39,7 @@ $font-sizes: (
   6: $h6-font-size
 );
 
-$headings-margin-bottom:      $spacer / 2;
+$headings-margin-bottom:      $spacer * .5;
 $headings-font-family:        null;
 $headings-font-style:         null;
 $headings-font-weight:        500;

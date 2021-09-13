@@ -20,10 +20,10 @@ $container-max-widths: (
 
 @include _assert-ascending($container-max-widths, '$container-max-widths');
 
-$grid-columns:                16;
+$grid-columns:                12;
 $grid-gutter-width:           1.5rem;
 $grid-row-columns:            6;
 
 $gutters: $spacers;
 
-$container-padding-x: $grid-gutter-width / 2;
+$container-padding-x: $grid-gutter-width * .5;

@@ -1,13 +1,27 @@
 # hanako-wp
 A basic wordpress template based on Timber/Twig and Hanako ts framework.
 
+## how to use
+To run webpack compilation:
+
+```npm run webpack```
+
+To add a new page/module/resource, etc. (using hanako-cli)
+```hanako add```
+
 ## ideas
 
 - ...
 
 ## Version
 
-Last release 07.09.2021
+Last release 13.09.2021
+
+### 1.4.5
+- Add CSS font smoothing
+- Remove compile .js
+- Set Boostrap to 12 columns
+- Fix models/single.php
 
 ### 1.4.4
 
