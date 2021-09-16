@@ -238,6 +238,16 @@ class MySettingsPage {
       array('backend', 'add_acf_options', 'Activer la page d\'option ACF')
     );
 
+    add_settings_field(
+      'disable_comments',
+      'Commentaires',
+      array($this, 'checkbox_callback'),
+      'options_backend',
+      'options_backend_main',
+      array('backend', 'disable_comments', 'Désactiver les commentaires')
+    );
+
+
     add_settings_section(
       'options_backend_hide',
       'Eléments à masquer',
@@ -489,6 +499,7 @@ class MySettingsPage {
 
       update_option('abb_options_backend', array(
         'theme_support_menus' => true,
+        'disable_comments' => true,
         'hide_screen_options' => true,
         'hide_metabox' => "itsec-dashboard-widget,dashboard,side,\nrg_forms_dashboard,dashboard, side\nlinkxfndiv,link,normal\nlinkadvanceddiv,link,normal'\ndashboard_quick_press,dashboard,side\ndashboard_plugins,dashboard,side\ndashboard_incoming_links,dashboard,side\ndashboard_recent_drafts,dashboard,side\nicl_dashboard_widget,dashboard,side\ndashboard_recent_comments,dashboard,normal\ndashboard_activity,dashboard,side\nwpseo-dashboard-overview,dashboard,side\ndashboard_incoming_links,dashboard,normal\ndashboard_primary,dashboard,side\ndashboard_secondary,dashboard,side\ndashboard_right_now,dashboard,side",
         'hide_metabox_posttype' => "categorydiv,side\ncommentsdiv,side\nrevisionsdiv,side\ncryptx,advanced\nrocket_post_exclude,side",

@@ -238,6 +238,11 @@ if (get_abb_option('post_types')) {
 if (get_abb_option('add_acf_options')) acf_add_options_page();
 
 /*
+ * Disable comments
+ */
+if (get_abb_option('disable_comments')) include('comments.php');
+
+/*
  * remove screen options
  */
 if (get_abb_option('hide_screen_options')) {

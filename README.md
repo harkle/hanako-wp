@@ -15,7 +15,11 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 13.09.2021
+Last release 16.09.2021
+
+### 1.4.6
+
+- Add comment disabling in backend options
 
 ### 1.4.5
 - Add CSS font smoothing

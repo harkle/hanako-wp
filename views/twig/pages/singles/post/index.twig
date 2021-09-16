@@ -1,5 +1,6 @@
 {% extends 'structure/html.twig' %}
 
 {% block content %}
-<h1>{{ post.title }}</h1>
+  <h1>{{ post.title }}</h1>
+  {{ function('comments_template') }}
 {% endblock %}
