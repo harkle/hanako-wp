@@ -15,7 +15,11 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 08.11.2021
+Last release 15.11.2021
+
+### 1.4.8
+
+- add Swiper.ts helper to handle swipe on touch devices
 
 ### 1.4.7
 
