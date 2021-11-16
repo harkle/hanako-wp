@@ -1,29 +1,17 @@
-// Replace
+// Add responsize sizing class
 $utilities: map-merge(
   $utilities,
   (
-    'color': (
-      property: color,
-      class: text,
-      responsive: false,
-      state: hover,
-      values: $theme-colors,
-    ),
-  )
-);
-
-// Modify
-// i.e add w-10
-$utilities: map-merge(
-  $utilities,
-  (
-    'width': map-merge(
-      map-get($utilities, 'width'),
-      (
-        values: map-merge(
-          map-get(map-get($utilities, 'width'), 'values'),
-          (10: 10%),
-        ),
+    'width': (
+      property: width,
+      class: w,
+      responsive: true,
+      values: (
+        25: 25%,
+        50: 50%,
+        75: 75%,
+        100: 100%,
+        auto: auto,
       ),
     ),
   )

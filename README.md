@@ -15,7 +15,11 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 15.11.2021
+Last release 16.11.2021
+
+### 1.4.9
+
+- add responsive sizing class in Boostrap
 
 ### 1.4.8
 
