@@ -15,7 +15,11 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 16.11.2021
+Last release 17.11.2021
+
+### 1.4.10
+
+- views structure update
 
 ### 1.4.9
 
