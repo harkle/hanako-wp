@@ -15,7 +15,13 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 17.11.2021
+Last release 19.11.2021
+
+### 1.4.11
+
+- move Debug to views/ts/components
+- add some function into Twig Functions (print_r)
+- Image Layzloading !!!
 
 ### 1.4.10
 

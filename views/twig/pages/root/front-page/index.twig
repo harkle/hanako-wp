@@ -1,5 +1,15 @@
 {% extends 'structure/html.twig' %}
 
 {% block content %}
-Frontpage
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-6">
+        {{ post.content }}
+        {% for image in post.meta('images') %}
+          {{ lazy_image(image, 'large', 'border', '', 'data-src="asad"')}}
+          <div class="ratio ratio-1x1 border" {{ lazy_background_image(image, 'large') }}></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 {% endblock %}

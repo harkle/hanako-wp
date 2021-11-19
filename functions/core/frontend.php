@@ -105,14 +105,44 @@ function get_the_original_translation_ID($lang = 'fr') {
   return icl_object_id(get_the_ID(), get_post_type(), false, $lang);
 }
 
-/* Timber Twig */
-function twig_asset($file) {
+/* Retrive asset */
+function hw_asset($file) {
   return get_bloginfo('template_directory') . '/dist/assets/' . $file;
 }
 
+/*
+ * Image with lazy loading
+ */
+function hw_lazy_image($image, $size, $classes = '', $alt = '', $data = '') {
+  $timber_Image = new Timber\Image($image);
+
+  $alt = (!empty($alt)) ? $alt : $timber_Image->alt;
+
+  echo '<div class="ratio ' . $classes . '" style="--bs-aspect-ratio: ' . (100 / $timber_Image->aspect ) .'%;">';
+  echo '<img data-hw-src="' . get_timber_image_src($timber_Image, $size) . '" class="d-block w-100" alt="' . $alt . '" ' . $data . '>';
+  echo '</div>';
+}
+
+/*
+ * Image background with lazy loading
+ */
+function hw_lazy_background_image($image, $size) {
+  $timber_Image = new Timber\Image($image);
+
+  echo 'data-hw-background-image="' . get_timber_image_src($timber_Image, $size) . '"';
+}
+
+/*
+ * add some useful functions
+ */
 add_filter('timber/twig', function ($twig) {
-  // Adding a function.
-  $twig->addFunction(new Timber\Twig_Function('asset', 'twig_asset'));
+  $twig->addFunction(new Timber\Twig_Function('print_r', 'print_r'));
+
+  $twig->addFunction(new Timber\Twig_Function('asset', 'hw_asset'));
+
+  $twig->addFunction(new Timber\Twig_Function('lazy_image', 'hw_lazy_image'));
+
+  $twig->addFunction(new Timber\Twig_Function('lazy_background_image', 'hw_lazy_background_image'));
 
   return $twig;
 });

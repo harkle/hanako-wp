@@ -1,7 +1,7 @@
 import { $ } from 'hanako-ts/dist-legacy/Framework';
 import { Collection } from 'hanako-ts/dist-legacy/Collection';
 import { Component } from 'hanako-ts/dist-legacy/Component';
-import { traverse } from './Traverse';
+import { traverse } from '../helpers/Traverse';
 
 export class Debug extends Component {
   private isDebugEnabled: boolean;
