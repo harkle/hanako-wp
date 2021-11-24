@@ -3,7 +3,7 @@ import { Component } from 'hanako-ts/dist-legacy/Component';
 import { Collection } from 'hanako-ts/dist-legacy/Collection';
 
 export class LazyLoader extends Component {
-  private static tolerence = 100;
+  private static tolerence = -100;
   private static images: Collection;
   private static backgroundImages: Collection;
 
