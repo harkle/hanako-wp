@@ -15,7 +15,11 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 19.11.2021
+Last release 24.11.2021
+
+### 1.4.12
+
+- Minor renaming
 
 ### 1.4.11
 
