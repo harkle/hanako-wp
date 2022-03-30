@@ -1,7 +1,9 @@
+@use 'sass:math';
+
 @function stripUnit($value) {
-  @return $value / ($value * 0 + 1);
+  @return math.div($value, ($value * 0 + 1));
 }
 
 @function rem($pixel-value) {
-  @return #{stripUnit($pixel-value) / stripUnit($html-font-size)}rem;
+  @return #{math.div(stripUnit($pixel-value), stripUnit($html-font-size))}rem;
 }

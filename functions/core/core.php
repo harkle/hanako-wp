@@ -89,7 +89,7 @@ add_action('admin_notices', function () {
   echo '<div class="notice notice-warning"><p>Warning some mandatory plugins are missing.</p><ul>';
   
   foreach ($installNotices as $installNotice) {
-    $url = ($installNotice['url']) ? $installNotice['url'] : $installNotice['external_url'];
+    $url = (isset($installNotice['url'])) ? $installNotice['url'] : $installNotice['external_url'];
     $target = (!empty($installNotice['external_url'])) ? 'target="_blank"' : '';
     echo '<li><a href="' . $url . '" '.$target.'>' . $installNotice['title'] . '</a></li>';
   }

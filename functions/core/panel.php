@@ -482,8 +482,13 @@ class MySettingsPage {
       ));
 
       update_option('abb_options_timmy', array(
-        'images_sizes' => '[]'
-      ));
+        'image_sizes' => '{
+  "thumbnail": {
+    "resize": [150, 150],
+    "name": "Vignette",
+    "post_types": ["all"]
+  }
+ }'));
 
       update_option('abb_options_cpt', array(
         'post_types' => "[]",
@@ -518,17 +523,23 @@ class MySettingsPage {
    * Get the settings option array and print one of its values
    */
   public function checkbox_callback($args) {
-    echo '<input type="checkbox" id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']" value="1" ' . checked(1, $this->options[$args[0]][$args[1]], false) . '>';
+    $option = isset($this->options[$args[0]][$args[1]]) ? $this->options[$args[0]][$args[1]] : false; 
+    
+    echo '<input type="checkbox" id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']" value="1" ' . checked(1, $option, false) . '>';
     echo '<label for="frontend_' . $args[1] . '">' . $args[2] . '</label>';
   }
 
   public function text_callback($args) {
-    echo '<input class="large-text" id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']" value="' . $this->options[$args[0]][$args[1]] . '">';
+    $option = isset($this->options[$args[0]][$args[1]]) ? $this->options[$args[0]][$args[1]] : false; 
+    
+    echo '<input class="large-text" id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']" value="' . $option . '">';
     echo '<label for="frontend_' . $args[1] . '">' . $args[2] . '</label>';
   }
 
   public function textarea_callback($args) {
-    echo '<textarea class="large-text code" rows="10" id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']">' . $this->options[$args[0]][$args[1]] . '</textarea>';
+    $option = isset($this->options[$args[0]][$args[1]]) ? $this->options[$args[0]][$args[1]] : false; 
+    
+    echo '<textarea class="large-text code" rows="10" id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']">' . $option . '</textarea>';
     echo '<label for="frontend_' . $args[1] . '">' . $args[2] . '</label>';
   }
 }

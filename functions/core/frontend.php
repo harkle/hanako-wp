@@ -29,17 +29,6 @@ if (get_abb_option('debug')) {
   });
 }
 
-/*
- * Default menu
- */
-add_filter('timber/context', function ($context) {
-  $context['menus'] = [
-    'main' => new \Timber\Menu('main')
-  ];
-
-  return $context;
-});
-
 if (!class_exists('Timmy\Timmy')) {
   $installNotices[] = [
     'external_url' => 'https://github.com/mindkomm/timmy/releases',
@@ -136,6 +125,8 @@ function hw_lazy_background_image($image, $size) {
  * add some useful functions
  */
 add_filter('timber/twig', function ($twig) {
+  $twig->addFunction(new Timber\Twig_Function('the_permalink', 'get_the_permalink'));
+
   $twig->addFunction(new Timber\Twig_Function('print_r', 'print_r'));
 
   $twig->addFunction(new Timber\Twig_Function('asset', 'hw_asset'));

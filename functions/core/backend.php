@@ -25,10 +25,8 @@ update_option('large_size_h', 0);
 
 set_post_thumbnail_size(0, 0);
 
-add_filter('jpeg_quality', create_function('', 'return 100;'));
-
+add_filter('jpeg_quality', function() { return 100; });
 add_filter('big_image_size_threshold', '__return_false');
-
 add_filter('timmy/generate_srcset_sizes', '__return_true');
 
 if (get_abb_option('image_sizes')) {
@@ -293,3 +291,10 @@ add_filter('site_status_tests', function($tests) {
   unset($tests['async']['background_updates']);
   return $tests;
 });
+
+/*
+ * Disable inline styles
+ */
+add_action('wp_enqueue_scripts', function() {
+  wp_dequeue_style('global-styles');
+}, 100);

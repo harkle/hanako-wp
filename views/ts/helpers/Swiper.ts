@@ -29,7 +29,7 @@ export class Swiper {
     if (typeof eventNames == 'string') eventNames = [eventNames];
 
     eventNames.forEach((eventName: string) => {
-      EventManager.add(this.element.get(0), eventName, null, callback);
+      EventManager.add(this.element.get(0), eventName, null, callback, false);
     });
   }
 

@@ -15,7 +15,13 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 24.11.2021
+Last release 30.03.2022
+
+### 1.4.13
+
+- Views structure update
+- PHP 8
+- Bugfix
 
 ### 1.4.12
 
@@ -42,7 +48,6 @@ Last release 24.11.2021
 ### 1.4.7
 
 - package.json update and some polishing.
-
 
 ### 1.4.6
 
