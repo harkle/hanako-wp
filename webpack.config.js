@@ -34,6 +34,14 @@ let configBase = {
             transpileOnly: false
           }
         }
+      }, {
+        test: /\.(png|jpe?g|gif|svg)$/,
+        exclude: exclude,
+        type: 'asset/resource'
+      }, {
+        test: /\.(woff|woff2|ttf|otf|eot)$/,
+        exclude: exclude,
+        type: 'asset/resource'
       },
       {
         test: /\.(scss|css)$/,
@@ -56,34 +64,6 @@ let configBase = {
             loader: 'sass-loader',
             options: {
               sourceMap: true
-            }
-          }
-        ]
-      }, {
-        test: /\.(png|jpe?g|gif|svg)$/,
-        exclude: exclude,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              publicPath: '../assets/images',
-              outputPath: 'assets/images',
-              esModule: false,
-            }
-          }
-        ]
-      }, {
-        test: /\.(woff|woff2|ttf|otf|eot)$/,
-        exclude: exclude,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              publicPath: '../assets/fonts',
-              outputPath: 'assets/fonts',
-              esModule: false
             }
           }
         ]
@@ -124,7 +104,8 @@ console.log('> Entry points');
           entry: basePath + subFolder + element,
           output: {
             filename: filename + '.min.js',
-            path: path.resolve(__dirname, basePath + '/dist')
+            path: path.resolve(__dirname, basePath + '/dist'),
+            assetModuleFilename: 'assets/[hash][ext][query]'
           },
           plugins: [
             new MiniCssExtractPlugin({
