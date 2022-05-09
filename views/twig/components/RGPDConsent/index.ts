@@ -20,14 +20,7 @@ export class RGPDConsent extends Component {
       $('#ab-rgpb-consent-details').removeClass('d-none');
     });
 
-    $('#ab-rgpd-btn-back').on('click', (event: MouseEvent) => {
-      event.preventDefault();
-
-      $('#ab-rgpb-consent-introduction').removeClass('d-none');
-      $('#ab-rgpb-consent-details').addClass('d-none');
-    });
-
-    $('#ab-rgpb-close, #ab-rgpd-btn-agree').on('click', (event: MouseEvent) => {
+    $('#ab-rgpb-close, #ab-rgpd-btn-agree, #ab-rgpd-btn-close').on('click', (event: MouseEvent) => {
       event.preventDefault();
 
       $('#ab-rgpb-consent').addClass('d-none');

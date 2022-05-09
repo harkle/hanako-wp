@@ -111,16 +111,6 @@ update_option('image_default_link_type', 'file');
 add_filter('sanitize_file_name', 'remove_accents');
 
 /*
- * Remove update plugin count
- */
-add_action('admin_menu', function () {
-  global $menu, $submenu;
-
-  $menu[65][0] = 'Plugins';
-  $submenu['index.php'][10][0] = 'Updates';
-});
-
-/*
  * Hide update notification
  */
 add_action('admin_head', function () {

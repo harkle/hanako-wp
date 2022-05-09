@@ -15,7 +15,15 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 30.03.2022
+Last release 09.05.2022
+
+### 1.4.14
+
+- Fix OB Flush warning
+– Add ACF escaping code
+– Fix RGPD Consent box
+– Update hanako-ts to 1.2.2
+– Fix PHP Warning due to update removal hook in menus
 
 ### 1.4.13
 
