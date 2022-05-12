@@ -288,3 +288,17 @@ add_filter('site_status_tests', function($tests) {
 add_action('wp_enqueue_scripts', function() {
   wp_dequeue_style('global-styles');
 }, 100);
+
+/*
+ * Auto reload
+ */
+function hw_get_assets_date() {
+  $style_time = filemtime(get_template_directory() . '/dist/css/style.min.css');
+  $script_time = filemtime(get_template_directory() . '/dist/js/site.min.js');
+
+  echo json_encode($style_time > $script_time ? $style_time : $script_time);
+  die();
+}
+
+add_action('wp_ajax_get_assets_date', 'hw_get_assets_date');
+add_action('wp_ajax_nopriv_get_assets_date', 'hw_get_assets_date');

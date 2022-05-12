@@ -15,7 +15,10 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 09.05.2022
+Last release 12.05.2022
+
+### 1.4.16
+- Autoreload: CSS and Javascript modification trigger autoreload
 
 ### 1.4.15
 - Remove ACF json save
