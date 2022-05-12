@@ -441,7 +441,7 @@ class MySettingsPage {
       array($this, 'textarea_callback'),
       'options_vendor',
       'options_vendor_externals',
-      array('vendor', 'externals_css', '{template_directory}<br><small>Une URL par ligne</small>')
+      array('vendor', 'externals_css', '<strong>{template_directory}</strong>: ' . get_bloginfo('template_directory') . '<br><strong>{debug}:</strong> ?time=' . date('U') . '<br><small>Une URL par ligne</small>')
     );
 
     add_settings_field(
@@ -450,7 +450,7 @@ class MySettingsPage {
       array($this, 'textarea_callback'),
       'options_vendor',
       'options_vendor_externals',
-      array('vendor', 'externals_scripts', '{template_directory}<br><small>Une URL par ligne</small>')
+      array('vendor', 'externals_scripts', '<strong>{template_directory}</strong>: ' . get_bloginfo('template_directory') . '<br><strong>{debug}:</strong> ?time' . date('U') . '<br><small>Une URL par ligne</small>')
     );
   }
 
@@ -481,6 +481,8 @@ class MySettingsPage {
         'redirect_to' => '/wp-admin/'
       ));
 
+      update_option('debug', true);
+        
       update_option('abb_options_timmy', array(
         'image_sizes' => '{
   "thumbnail": {

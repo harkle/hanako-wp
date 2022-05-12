@@ -44,14 +44,16 @@ if (!class_exists('Timmy\Timmy')) {
  * Include
  */
 
-$abb_styles[] = array('abb-styles', get_bloginfo('template_directory') . '/dist/css/style.min.css', false);
-$abb_scripts[] = array('abb-scripts', get_bloginfo('template_directory') . '/dist/js/site.min.js');
+$debug_suffix = (get_abb_option('debug') ? '?time=' . date('U') : '');
+$abb_styles[] = array('abb-styles', get_bloginfo('template_directory') . '/dist/css/style.min.css' . $debug_suffix, false);
+$abb_scripts[] = array('abb-scripts', get_bloginfo('template_directory') . '/dist/js/site.min.js' . $debug_suffix);
 
 $i = 0;
 $externals_scripts = explode("\n", get_abb_option('externals_scripts'));
 if (is_array($externals_scripts)) {
   foreach ($externals_scripts as $external_script) {
     $external_script = str_replace('{template_directory}', get_bloginfo('template_directory'), $external_script);
+    $external_script = str_replace('{debug}', $debug_suffix, $external_script);
     $abb_scripts[] = array('external_' . $i, $external_script);
 
     $i++;
@@ -62,6 +64,7 @@ $externals_css = explode("\n", get_abb_option('externals_css'));
 if (is_array($externals_css)) {
   foreach ($externals_css as $external_css) {
     $external_css = str_replace('{template_directory}', get_bloginfo('template_directory'), $external_css);
+    $external_css = str_replace('{debug}', $debug_suffix, $external_css);
     $abb_styles[] = array('external_' . $i, $external_css);
 
     $i++;

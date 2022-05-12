@@ -17,6 +17,11 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 Last release 09.05.2022
 
+### 1.4.15
+- Remove ACF json save
+– Debug option true by default
+- Whe debug is activate css and js are invalidated on reload by ?time=xxx
+
 ### 1.4.14
 
 - Fix OB Flush warning
