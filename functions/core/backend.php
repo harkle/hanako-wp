@@ -292,11 +292,37 @@ add_action('wp_enqueue_scripts', function() {
 /*
  * Auto reload
  */
-function hw_get_assets_date() {
-  $style_time = filemtime(get_template_directory() . '/dist/css/style.min.css');
-  $script_time = filemtime(get_template_directory() . '/dist/js/site.min.js');
+function hw_get_dir_contents($dirs, &$results = array(), $ignore_wp_path = false) {
+  if (!is_array($dirs)) $dirs = [$dirs];
 
-  echo json_encode($style_time > $script_time ? $style_time : $script_time);
+  foreach ($dirs as $dir) {
+    $dir = (!$ignore_wp_path ? get_template_directory() . '/' : '') . $dir;
+    $files = scandir($dir);
+
+    foreach ($files as $key => $value) {
+      $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+      if (!is_dir($path)) {
+        if (in_array(pathinfo($path, PATHINFO_EXTENSION), ['php', 'twig', 'jpg', 'svg', 'js', 'css', 'png', 'gif'])) $results[] = $path;
+      } else if ($value != '.' && $value != '..') {
+        hw_get_dir_contents($path, $results, true);
+      }
+    }
+  }
+
+  return $results;
+}
+
+function hw_get_assets_date() {
+  $files = hw_get_dir_contents(['dist', 'views', 'functions', 'models']);
+
+  $modification_time = 0;
+  foreach ($files as $file) {
+    $filetime = filemtime($file);
+
+    if ($filetime > $modification_time) $modification_time = $filetime;
+  }
+
+  echo json_encode($modification_time);
   die();
 }
 

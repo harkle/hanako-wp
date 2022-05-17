@@ -19,7 +19,7 @@ export class AutoReload extends Component {
         body: {
           'action': 'get_assets_date'
         },
-        dataType: 'text'
+        dataType: 'json'
       });
 
       if (parseInt(response) != this.lastTime && this.lastTime != 0) location.reload();

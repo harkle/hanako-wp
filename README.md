@@ -15,7 +15,10 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 12.05.2022
+Last release 17.05.2022
+
+### 1.4.17
+- Autoreload: php, twig, js, css and images trigger autoreload
 
 ### 1.4.16
 - Autoreload: CSS and Javascript modification trigger autoreload
