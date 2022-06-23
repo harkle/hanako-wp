@@ -1,30 +1,33 @@
+import { Debug as HW_Debug } from 'hanako-ts/dist-legacy/Tools/Debug';
 import { $ } from 'hanako-ts/dist-legacy/Framework';
 import { Collection } from 'hanako-ts/dist-legacy/Collection';
 import { Component } from 'hanako-ts/dist-legacy/Component';
 import { traverse } from '../helpers/Traverse';
 
 export class Debug extends Component {
-  private isDebugEnabled: boolean;
+  private static isDebugEnabled: boolean;
 
-  constructor(isDebugEnabled: boolean = false) {
+  constructor() {
     super('Debug', false);
 
-    this.isDebugEnabled = isDebugEnabled;
+    if ($('body').hasClass('dev-mode')) {
+      Debug.isDebugEnabled = HW_Debug.isEnabled = true;
+    }
   }
 
   public async init(): Promise<void> {
     await super.init();
 
-    this.setupConsole();
-    this.test();
+    if (Debug.isDebugEnabled) {
+      this.setupConsole();
+      this.test();
+    };
 
     this.success();
   }
 
   private setupConsole() {
-    if (!$('body').hasClass('debug')) return;
-
-    let consoleElement = $.parseHTML('<div class="hanako-terminal hanako-terminal-debug"><pre><code id="debug-console"></code></pre></div>');
+    let consoleElement = $.parseHTML('<div class="hanako-terminal hanako-terminal-debug"><a href="#" id="hanako-terminal-mobile-mode" class="d-lg-none"></a><pre><code id="debug-console"></code></pre></div>');
 
     $('body').append(consoleElement);
 
@@ -55,27 +58,44 @@ export class Debug extends Component {
 
       if (event.altKey && event.code == 'KeyC') $('#debug-console').empty();
     });
+
+    if ($(window).width() > 991) {
+      consoleElement.on('dblclick', () => {
+        consoleElement.toggleClass('expanded');
+      });
+    } else {
+      $('#hanako-terminal-mobile-mode').on('click', () => {
+        console.log('asas')
+        if (consoleElement.hasClass('expanded')) {
+          consoleElement.removeClass('in expanded');
+        } else if (consoleElement.hasClass('in')) {
+          consoleElement.addClass('expanded');
+        } else {
+          consoleElement.addClass('in');
+        }
+      });
+    }
   }
 
   private async test() {
-    if (!$('body').hasClass('hanako-test')) return;
+    Debug.log('Hello world! My name is <span class="key">Hanako</span> and I\'m here to help you.');
 
-    Debug.print('test', 'Hello world! My name is <span class="key">Hanako</span> and I\'m here to help you.', '', '<br>', true);
-
-    Debug.print('test', 'Please wait for images to load...', '', '<br>', true);
+    Debug.log('Please wait for images to load...');
 
     await $.imagesLoaded($('img'));
     let images: Collection = $('img');
 
-    Debug.print('test', images.length + ' images loaded', '', '<br>', true);
+    Debug.log(images.length + ' images loaded');
 
     $('img').each((image: Collection) => {
       Debug.print('test', image, '', '', true);
       Debug.print('test', '&#9;' + image.attr('src'), '', '<br>');
     });
 
-    Debug.print('test', 'Everything seems to be okay. <span class="key">Enjoy your day...</span>', '', '<br>', true);
-
+    Debug.log('Everything seems to be okay. <span class="key">Enjoy your day...</span>');
+    for (let i = 0; i < 100; i++) {
+      Debug.log('asd');
+    }
   }
 
   public static print(target: string, message: any, before: string = '', after: string = '', showTime: boolean = false) {
@@ -98,7 +118,7 @@ export class Debug extends Component {
   }
 
   public static log(message: any) {
-    if (!$('body').hasClass('debug')) return;
+    if (!Debug.isDebugEnabled) return;
 
     Debug.print('debug', message, '', '<br>', true);
 

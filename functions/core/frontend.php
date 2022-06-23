@@ -19,11 +19,11 @@ if (!class_exists('Timber')) {
 }
 
 /*
- * Debug
+ * Dev mode
  */
-if (get_abb_option('debug')) {
+if (get_abb_option('dev_mode')) {
   add_filter('body_class', function ($classes) {
-    $classes[] =  'debug';
+    $classes[] =  'dev-mode';
 
     return $classes;
   });
@@ -44,16 +44,16 @@ if (!class_exists('Timmy\Timmy')) {
  * Include
  */
 
-$debug_suffix = (get_abb_option('debug') ? '?time=' . date('U') : '');
-$abb_styles[] = array('abb-styles', get_bloginfo('template_directory') . '/dist/css/style.min.css' . $debug_suffix, false);
-$abb_scripts[] = array('abb-scripts', get_bloginfo('template_directory') . '/dist/js/site.min.js' . $debug_suffix);
+$dev_suffix = (get_abb_option('dev_mode') ? '?time=' . date('U') : '');
+$abb_styles[] = array('abb-styles', get_bloginfo('template_directory') . '/dist/css/style.min.css' . $dev_suffix, false);
+$abb_scripts[] = array('abb-scripts', get_bloginfo('template_directory') . '/dist/js/site.min.js' . $dev_suffix);
 
 $i = 0;
 $externals_scripts = explode("\n", get_abb_option('externals_scripts'));
 if (is_array($externals_scripts)) {
   foreach ($externals_scripts as $external_script) {
     $external_script = str_replace('{template_directory}', get_bloginfo('template_directory'), $external_script);
-    $external_script = str_replace('{debug}', $debug_suffix, $external_script);
+    $external_script = str_replace('{dev}', $dev_suffix, $external_script);
     $abb_scripts[] = array('external_' . $i, $external_script);
 
     $i++;
@@ -64,7 +64,7 @@ $externals_css = explode("\n", get_abb_option('externals_css'));
 if (is_array($externals_css)) {
   foreach ($externals_css as $external_css) {
     $external_css = str_replace('{template_directory}', get_bloginfo('template_directory'), $external_css);
-    $external_css = str_replace('{debug}', $debug_suffix, $external_css);
+    $external_css = str_replace('{dev}', $dev_suffix, $external_css);
     $abb_styles[] = array('external_' . $i, $external_css);
 
     $i++;
@@ -82,7 +82,7 @@ if (!get_abb_option('show_admin_bar')) add_filter('show_admin_bar', '__return_fa
 add_action('init', function () {
   if (!is_user_logged_in() && get_abb_option('hide_site') && $GLOBALS['pagenow'] !== 'wp-login.php') {
     $allowed_urls = explode(',', get_abb_option('allowed_urls'));
-  
+
     if (!in_array($_SERVER['REQUEST_URI'], $allowed_urls) && $_SERVER['REQUEST_URI'] != get_abb_option('redirect_to')) {
       wp_redirect(get_abb_option('redirect_to'));
       die();
@@ -110,7 +110,7 @@ function hw_lazy_image($image, $size, $classes = '', $alt = '', $data = '') {
 
   $alt = (!empty($alt)) ? $alt : $timber_Image->alt;
 
-  echo '<div class="ratio ' . $classes . '" style="--bs-aspect-ratio: ' . (100 / $timber_Image->aspect ) .'%;">';
+  echo '<div class="ratio ' . $classes . '" style="--bs-aspect-ratio: ' . (100 / $timber_Image->aspect) . '%;">';
   echo '<img data-hw-src="' . get_timber_image_src($timber_Image, $size) . '" class="d-block w-100" alt="' . $alt . '" ' . $data . '>';
   echo '</div>';
 }
@@ -147,8 +147,8 @@ add_filter('timber/twig', function ($twig) {
 $templateTypes = ['index', '404', 'archive', 'author', 'category', 'tag', 'taxonomy', 'date', 'embed', 'home', 'frontpage', 'privacypolicy', 'page', 'paged', 'search', 'single', 'singular', 'attachment'];
 
 foreach ($templateTypes as $templateType) {
-  add_filter($templateType . '_template_hierarchy', function($templates) {
-    foreach($templates as &$template) {
+  add_filter($templateType . '_template_hierarchy', function ($templates) {
+    foreach ($templates as &$template) {
       if (strpos($template, 'odels/') != 1) {
         $template = 'models/' . $template;
       }
@@ -161,6 +161,21 @@ foreach ($templateTypes as $templateType) {
 /*
  * Load translations
  */
-add_action('after_setup_theme', function() {
+add_action('after_setup_theme', function () {
   load_theme_textdomain('hw-theme', get_template_directory() . '/languages');
+});
+
+/*
+ * Add defered attribute to style and script tag
+ */
+add_filter('style_loader_tag', function($tag) {
+  return str_replace(' href', ' defer href', $tag);
+
+  return $tag;
+});
+
+add_filter('script_loader_tag', function($tag) {
+  return str_replace(' src', ' defer src', $tag);
+
+  return $tag;
 });

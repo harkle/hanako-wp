@@ -40,8 +40,10 @@ if (get_abb_option('image_sizes')) {
 /*
  * Add editor the privilege to edit theme
  */
-$role_object = get_role('editor');
-$role_object->add_cap('edit_theme_options');
+add_action('admin_init', function() {
+  $role = get_role('editor');
+	$role->add_cap('edit_theme_options');
+});
 
 /*
  * Allow svg upload
@@ -302,7 +304,7 @@ function hw_get_dir_contents($dirs, &$results = array(), $ignore_wp_path = false
     foreach ($files as $key => $value) {
       $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
       if (!is_dir($path)) {
-        if (in_array(pathinfo($path, PATHINFO_EXTENSION), ['php', 'twig', 'jpg', 'svg', 'js', 'css', 'png', 'gif'])) $results[] = $path;
+        if (in_array(pathinfo($path, PATHINFO_EXTENSION), ['php', 'twig','js', 'css'])) $results[] = $path;
       } else if ($value != '.' && $value != '..') {
         hw_get_dir_contents($path, $results, true);
       }

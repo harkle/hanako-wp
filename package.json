@@ -1,6 +1,6 @@
 {
   "name": "hanako-wp",
-  "version": "1.4.17",
+  "version": "1.4.18",
   "description": "A basic wordpress project template based on Timber/Twig and Hanako ts/scss framework.",
   "homepage": "https://github.com/harkle/hanako-wp",
   "bugs": {
@@ -19,7 +19,7 @@
   "devDependencies": {
     "@types/bootstrap": "^5.1.9",
     "autoprefixer": "^10.4.4",
-    "bootstrap": "^5.1.3",
+    "bootstrap": "^5.2.0-beta1",
     "chokidar": "^3.5.3",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",
@@ -27,7 +27,7 @@
     "event-hooks-webpack-plugin": "^2.2.0",
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "^7.2.1",
-    "hanako-ts": "^1.2.2",
+    "hanako-ts": "^1.2.3",
     "html-loader": "^3.1.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",

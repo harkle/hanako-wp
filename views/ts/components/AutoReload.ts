@@ -12,20 +12,23 @@ export class AutoReload extends Component {
   public async init(): Promise<void> {
     await super.init();
 
-    setInterval(async () => {
-      const response: string = await $.httpRequest({
-        url: '/wp-admin/admin-ajax.php',
-        type: 'POST',
-        body: {
-          'action': 'get_assets_date'
-        },
-        dataType: 'json'
-      });
+    if ($('body').hasClass('dev-mode')) {
 
-      if (parseInt(response) != this.lastTime && this.lastTime != 0) location.reload();
-
-      this.lastTime = parseInt(response);
-    }, 2500);
+      setInterval(async () => {
+        const response: string = await $.httpRequest({
+          url: '/wp-admin/admin-ajax.php',
+          type: 'POST',
+          body: {
+            'action': 'get_assets_date'
+          },
+          dataType: 'json'
+        });
+        
+        if (parseInt(response) != this.lastTime && this.lastTime != 0) location.reload();
+        
+        this.lastTime = parseInt(response);
+      }, 2500);
+    }
 
     this.success();
   }

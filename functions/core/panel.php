@@ -154,12 +154,12 @@ class MySettingsPage {
     );
 
     add_settings_field(
-      'debug',
-      'Mode debug',
+      'dev_mode',
+      'Mode développement',
       array($this, 'checkbox_callback'),
       'options_frontend',
       'options_frontend_main',
-      array('frontend', 'debug', 'Activer le mode debug <small>(Ajoute la classe "debug" au tag body)</small>')
+      array('frontend', 'dev_mode', 'Activer le mode développement')
     );
 
     add_settings_section(
@@ -194,15 +194,6 @@ class MySettingsPage {
       'options_frontend',
       'options_frontend_visibility',
       array('frontend', 'allowed_urls', 'Séparer les urls par des virgules')
-    );
-
-    add_settings_field(
-      'debug',
-      'Mode debug',
-      array($this, 'checkbox_callback'),
-      'options_frontend',
-      'options_frontend_main',
-      array('frontend', 'debug', 'Activer le mode debug <small>(Ajoute la classe "debug" au tag body)</small>')
     );
 
 
@@ -441,7 +432,7 @@ class MySettingsPage {
       array($this, 'textarea_callback'),
       'options_vendor',
       'options_vendor_externals',
-      array('vendor', 'externals_css', '<strong>{template_directory}</strong>: ' . get_bloginfo('template_directory') . '<br><strong>{debug}:</strong> ?time=' . date('U') . '<br><small>Une URL par ligne</small>')
+      array('vendor', 'externals_css', '<strong>{template_directory}</strong>: ' . get_bloginfo('template_directory') . '<br><strong>{dev}:</strong> ?time=' . date('U') . '<br><small>Une URL par ligne</small>')
     );
 
     add_settings_field(
@@ -450,7 +441,7 @@ class MySettingsPage {
       array($this, 'textarea_callback'),
       'options_vendor',
       'options_vendor_externals',
-      array('vendor', 'externals_scripts', '<strong>{template_directory}</strong>: ' . get_bloginfo('template_directory') . '<br><strong>{debug}:</strong> ?time' . date('U') . '<br><small>Une URL par ligne</small>')
+      array('vendor', 'externals_scripts', '<strong>{template_directory}</strong>: ' . get_bloginfo('template_directory') . '<br><strong>{dev}:</strong> ?time' . date('U') . '<br><small>Une URL par ligne</small>')
     );
   }
 
@@ -481,7 +472,7 @@ class MySettingsPage {
         'redirect_to' => '/wp-admin/'
       ));
 
-      update_option('debug', true);
+      update_option('dev_mode', true);
         
       update_option('abb_options_timmy', array(
         'image_sizes' => '{
