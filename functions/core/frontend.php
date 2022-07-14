@@ -168,14 +168,16 @@ add_action('after_setup_theme', function () {
 /*
  * Add defered attribute to style and script tag
  */
-add_filter('style_loader_tag', function($tag) {
+add_filter('style_loader_tag', function ($tag) {
   return str_replace(' href', ' defer href', $tag);
 
   return $tag;
 });
 
-add_filter('script_loader_tag', function($tag) {
-  return str_replace(' src', ' defer src', $tag);
+if (!is_admin()) {
+  add_filter('script_loader_tag', function ($tag) {
+    return str_replace(' src', ' defer src', $tag);
 
-  return $tag;
-});
+    return $tag;
+  });
+}

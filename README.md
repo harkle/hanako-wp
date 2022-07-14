@@ -15,7 +15,10 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 23.06.2022
+Last release 14.07.2022
+
+### 1.4.19
+- Fix issue with defered scripts in admin
 
 ### 1.4.18
 - Hanako-ts 1.2.3
