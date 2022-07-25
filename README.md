@@ -15,7 +15,10 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 14.07.2022
+Last release 25.07.2022
+
+### 1.4.25
+- Fix an issue with lazy loading image ratio
 
 ### 1.4.19
 - Fix issue with defered scripts in admin

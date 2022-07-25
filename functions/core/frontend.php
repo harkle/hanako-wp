@@ -106,12 +106,18 @@ function hw_asset($file) {
  * Image with lazy loading
  */
 function hw_lazy_image($image, $size, $classes = '', $alt = '', $data = '') {
-  $timber_Image = new Timber\Image($image);
+  $timber_image = new Timber\Image($image);
 
-  $alt = (!empty($alt)) ? $alt : $timber_Image->alt;
+  $alt = (!empty($alt)) ? $alt : $timber_image->alt;
 
-  echo '<div class="ratio ' . $classes . '" style="--bs-aspect-ratio: ' . (100 / $timber_Image->aspect) . '%;">';
-  echo '<img data-hw-src="' . get_timber_image_src($timber_Image, $size) . '" class="d-block w-100" alt="' . $alt . '" ' . $data . '>';
+  $ratio = $timber_image->aspect > 0 ? 100 / $timber_image->aspect : 1;
+
+  if (isset($timber_image->sizes[$size])) {
+    $ratio = 100 / ($timber_image->sizes[$size]['width'] / $timber_image->sizes[$size]['height']);
+  }
+
+  echo '<div class="ratio ' . $classes . '" style="--bs-aspect-ratio: ' . $ratio . '%;">';
+  echo '<img data-hw-src="' . get_timber_image_src($timber_image, $size) . '" class="d-block w-100" alt="' . $alt . '" ' . $data . '>';
   echo '</div>';
 }
 
@@ -119,9 +125,9 @@ function hw_lazy_image($image, $size, $classes = '', $alt = '', $data = '') {
  * Image background with lazy loading
  */
 function hw_lazy_background_image($image, $size) {
-  $timber_Image = new Timber\Image($image);
+  $timber_image = new Timber\Image($image);
 
-  echo 'data-hw-background-image="' . get_timber_image_src($timber_Image, $size) . '"';
+  echo 'data-hw-background-image="' . get_timber_image_src($timber_image, $size) . '"';
 }
 
 /*
