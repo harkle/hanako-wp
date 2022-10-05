@@ -1,6 +1,6 @@
 {
   "name": "hanako-wp",
-  "version": "1.4.20",
+  "version": "1.4.26",
   "description": "A basic wordpress project template based on Timber/Twig and Hanako ts/scss framework.",
   "homepage": "https://github.com/harkle/hanako-wp",
   "bugs": {
@@ -12,7 +12,7 @@
   },
   "author": {
     "name": "Lionel Tardy",
-    "email": "mail@lionel.me",
+    "email": "lionel.tardy@me.com",
     "url": "https://github.com/harkle"
   },
   "license": "MIT",

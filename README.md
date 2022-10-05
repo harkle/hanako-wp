@@ -15,7 +15,11 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 25.07.2022
+Last release 05.10.2022
+
+### 1.4.26
+- Auto reload and dev mode are now independent
+– PHP Errors reporting can be configured in backend
 
 ### 1.4.25
 - Fix an issue with lazy loading image ratio

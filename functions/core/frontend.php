@@ -29,6 +29,37 @@ if (get_abb_option('dev_mode')) {
   });
 }
 
+/*
+ * Auto reload
+ */
+if (get_abb_option('auto_reload')) {
+  add_filter('body_class', function ($classes) {
+    $classes[] =  'auto-reload';
+
+    return $classes;
+  });
+}
+
+/*
+ * Error reporting
+ */
+if (get_abb_option('error_reporting')) {
+  $error_reporting = get_abb_option('error_reporting');
+
+  ini_set('display_errors', 1);
+
+  if ($error_reporting == 1) error_reporting(E_ALL);
+  if ($error_reporting == 2) error_reporting(E_ERROR);
+  if ($error_reporting == 3) error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
+  if ($error_reporting == 4) error_reporting(E_ALL ^ E_WARNING ^ E_DEPRECATED);
+  if ($error_reporting == 5) error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);
+} else {
+  ini_set('display_errors', 0);
+}
+
+/*
+ * Timmy
+ */
 if (!class_exists('Timmy\Timmy')) {
   $installNotices[] = [
     'external_url' => 'https://github.com/mindkomm/timmy/releases',
@@ -116,9 +147,11 @@ function hw_lazy_image($image, $size, $classes = '', $alt = '', $data = '') {
     $ratio = 100 / ($timber_image->sizes[$size]['width'] / $timber_image->sizes[$size]['height']);
   }
 
-  echo '<div class="ratio ' . $classes . '" style="--bs-aspect-ratio: ' . $ratio . '%;">';
-  echo '<img data-hw-src="' . get_timber_image_src($timber_image, $size) . '" class="d-block w-100" alt="' . $alt . '" ' . $data . '>';
-  echo '</div>';
+  $return  = '<div class="ratio ' . $classes . '" style="--bs-aspect-ratio: ' . $ratio . '%;">';
+  $return .= '<img data-hw-src="' . get_timber_image_src($timber_image, $size) . '" class="d-block w-100" alt="' . $alt . '" ' . $data . '>';
+  $return .= '</div>';
+
+  return $return;
 }
 
 /*
@@ -127,7 +160,7 @@ function hw_lazy_image($image, $size, $classes = '', $alt = '', $data = '') {
 function hw_lazy_background_image($image, $size) {
   $timber_image = new Timber\Image($image);
 
-  echo 'data-hw-background-image="' . get_timber_image_src($timber_image, $size) . '"';
+  return 'data-hw-background-image="' . get_timber_image_src($timber_image, $size) . '"';
 }
 
 /*

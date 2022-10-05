@@ -12,8 +12,7 @@ export class AutoReload extends Component {
   public async init(): Promise<void> {
     await super.init();
 
-    if ($('body').hasClass('dev-mode')) {
-
+    if ($('body').hasClass('auto-reload')) {
       setInterval(async () => {
         const response: string = await $.httpRequest({
           url: '/wp-admin/admin-ajax.php',

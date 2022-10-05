@@ -162,6 +162,24 @@ class MySettingsPage {
       array('frontend', 'dev_mode', 'Activer le mode développement')
     );
 
+     add_settings_field(
+      'auto_reload',
+      'Rechargement automatique',
+      array($this, 'checkbox_callback'),
+      'options_frontend',
+      'options_frontend_main',
+      array('frontend', 'auto_reload', 'Activer le rechargement automatique')
+    );
+
+    add_settings_field(
+      'error_reporting',
+      'Nivaux d\'erreurs',
+      array($this, 'select_callback'),
+      'options_frontend',
+      'options_frontend_main',
+      array('frontend', 'error_reporting', ['Ne rien afficher', 'Tout afficher', 'Afficher les erreurs', 'Afficher les avertissements', 'Afficher les notices', 'Afficher les déprécié' ])
+    );
+
     add_settings_section(
       'options_frontend_visibility',
       'Redirection',
@@ -534,6 +552,16 @@ class MySettingsPage {
     
     echo '<textarea class="large-text code" rows="10" id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']">' . $option . '</textarea>';
     echo '<label for="frontend_' . $args[1] . '">' . $args[2] . '</label>';
+  }
+
+  public function select_callback($args) {
+    $option = isset($this->options[$args[0]][$args[1]]) ? $this->options[$args[0]][$args[1]] : false; 
+    
+    echo '<select id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']">';
+    foreach ($args[2] as $key => $value) {
+      echo '<option value="' . $key . '" ' . selected($key, $option, false) . '>' . $value . '</option>';
+    }
+    echo '</select>';
   }
 }
 
