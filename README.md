@@ -15,7 +15,10 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 05.10.2022
+Last release 14.11.2022
+
+### 1.4.27
+- Bootstrap 5.2
 
 ### 1.4.26
 - Auto reload and dev mode are now independent
@@ -29,7 +32,7 @@ Last release 05.10.2022
 
 ### 1.4.18
 - Hanako-ts 1.2.3
-- Bootstrap 5.2
+- Bootstrap 5.2 beta
 - defered js loading
 - enhanced console
 

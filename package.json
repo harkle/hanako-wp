@@ -1,6 +1,6 @@
 {
   "name": "hanako-wp",
-  "version": "1.4.26",
+  "version": "1.4.27",
   "description": "A basic wordpress project template based on Timber/Twig and Hanako ts/scss framework.",
   "homepage": "https://github.com/harkle/hanako-wp",
   "bugs": {
@@ -19,7 +19,7 @@
   "devDependencies": {
     "@types/bootstrap": "^5.1.9",
     "autoprefixer": "^10.4.4",
-    "bootstrap": "^5.2.0-beta1",
+    "bootstrap": "^5.2.2",
     "chokidar": "^3.5.3",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",

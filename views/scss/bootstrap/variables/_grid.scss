@@ -7,9 +7,6 @@ $grid-breakpoints: (
   xxl: 1400px
 );
 
-@include _assert-ascending($grid-breakpoints, '$grid-breakpoints');
-@include _assert-starts-at-zero($grid-breakpoints, '$grid-breakpoints');
-
 $container-max-widths: (
   sm: 540px,
   md: 720px,
@@ -18,12 +15,8 @@ $container-max-widths: (
   xxl: 1320px
 );
 
-@include _assert-ascending($container-max-widths, '$container-max-widths');
+$grid-columns:                12 !default;
+$grid-gutter-width:           1.5rem !default;
+$grid-row-columns:            6 !default;
 
-$grid-columns:                12;
-$grid-gutter-width:           1.5rem;
-$grid-row-columns:            6;
-
-$gutters: $spacers;
-
-$container-padding-x: $grid-gutter-width * .5;
+$container-padding-x: $grid-gutter-width !default;
