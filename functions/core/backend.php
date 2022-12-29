@@ -2,6 +2,28 @@
 include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 
 /*
+ * Allow editors to edit menus
+ */
+add_action('admin_init', function() {
+  $role = get_role('editor');
+	$role->add_cap('edit_theme_options');
+});
+
+/*
+ * Disables WordPress from generating thumbnail images when a PDF is uploaded
+ * Code credit to http://www.wpbeginner.com/wp-tutorials/how-to-disable-pdf-thumbnail-previews-in-wordpress/
+ */
+add_filter('fallback_intermediate_image_sizes', function() {
+	$fallbacksizes = array(); 
+	return $fallbacksizes; 
+});
+
+/*
+ * Disable Gutenberg
+ */
+add_filter('use_block_editor_for_post', '__return_false');
+
+/*
  * Notice the remind wp-config edition is needed
  */
 if (!defined('WP_AUTO_UPDATE_CORE')) {

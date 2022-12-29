@@ -15,7 +15,18 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 14.11.2022
+Last release 29.12.2022
+
+### 1.5
+- Timber/Twig muss be installed via composer
+- Hanako-ts 1.2.4
+- remove "defer" on wp-login.php
+- remove console and demo
+- refactor twig files structure
+- remove debug component
+- bugfix lazyloader
+- webp for lazyloader
+- various functions added to functions/core
 
 ### 1.4.27
 - Bootstrap 5.2

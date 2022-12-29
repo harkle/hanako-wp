@@ -9,3 +9,12 @@ add_filter('timber/context', function ($context) {
 
   return $context;
 });
+
+/*
+ * Add some useful functions
+ */
+add_filter('timber/twig', function ($twig) {
+  //$twig->addFunction(new Timber\Twig_Function('the_permalink', 'get_the_permalink'));
+
+  return $twig;
+});

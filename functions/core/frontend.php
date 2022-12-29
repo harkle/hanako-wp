@@ -1,4 +1,7 @@
 <?php
+use Timber\ImageHelper;
+
+
 /*
  * Timber
  */
@@ -136,19 +139,23 @@ function hw_asset($file) {
 /*
  * Image with lazy loading
  */
-function hw_lazy_image($image, $size, $classes = '', $alt = '', $data = '') {
+function hw_lazy_image($image, $size, $classes = '', $alt = '', $title = '', $data = '') {
   $timber_image = new Timber\Image($image);
 
-  $alt = (!empty($alt)) ? $alt : $timber_image->alt;
+  if (empty($image)) return;
 
-  $ratio = $timber_image->aspect > 0 ? 100 / $timber_image->aspect : 1;
+  $ratio = $timber_image->aspect() > 0 ? 100 / $timber_image->aspect : 1;
 
   if (isset($timber_image->sizes[$size])) {
     $ratio = 100 / ($timber_image->sizes[$size]['width'] / $timber_image->sizes[$size]['height']);
   }
 
+  $alt = (!empty($alt)) ? $alt : $timber_image->alt;
+  $title = (!empty($title)) ? $alt : $timber_image->title;
+  $src = ImageHelper::img_to_webp(get_timber_image_src($timber_image, $size));
+
   $return  = '<div class="ratio ' . $classes . '" style="--bs-aspect-ratio: ' . $ratio . '%;">';
-  $return .= '<img data-hw-src="' . get_timber_image_src($timber_image, $size) . '" class="d-block w-100" alt="' . $alt . '" ' . $data . '>';
+  $return .= '<img data-hw-src="' . $src . '" class="d-block w-100" title="' . $title . '" alt="' . $alt . '" ' . $data . '>';
   $return .= '</div>';
 
   return $return;
@@ -160,7 +167,9 @@ function hw_lazy_image($image, $size, $classes = '', $alt = '', $data = '') {
 function hw_lazy_background_image($image, $size) {
   $timber_image = new Timber\Image($image);
 
-  return 'data-hw-background-image="' . get_timber_image_src($timber_image, $size) . '"';
+  $src = ImageHelper::img_to_webp(get_timber_image_src($timber_image, $size));
+
+  return 'data-hw-background-image="' . $src . '"';
 }
 
 /*
@@ -207,13 +216,13 @@ add_action('after_setup_theme', function () {
 /*
  * Add defered attribute to style and script tag
  */
-add_filter('style_loader_tag', function ($tag) {
-  return str_replace(' href', ' defer href', $tag);
+if (!is_admin() && $GLOBALS['pagenow'] !== 'wp-login.php') {
+  add_filter('style_loader_tag', function ($tag) {
+    return str_replace(' href', ' defer href', $tag);
+  
+    return $tag;
+  });
 
-  return $tag;
-});
-
-if (!is_admin()) {
   add_filter('script_loader_tag', function ($tag) {
     return str_replace(' src', ' defer src', $tag);
 

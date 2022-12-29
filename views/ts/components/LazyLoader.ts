@@ -3,7 +3,7 @@ import { Component } from 'hanako-ts/dist-legacy/Component';
 import { Collection } from 'hanako-ts/dist-legacy/Collection';
 
 export class LazyLoader extends Component {
-  private static tolerence = -100;
+  private static tolerence = 100;
   private static images: Collection;
   private static backgroundImages: Collection;
 
@@ -14,8 +14,7 @@ export class LazyLoader extends Component {
   public async init(): Promise<void> {
     await super.init();
 
-    LazyLoader.images = $('*[data-hw-src]');
-    LazyLoader.backgroundImages = $('*[data-hw-background-image]');
+    LazyLoader.refreshImageList();
 
     $(window).on('scroll', () => {
       LazyLoader.checkImageVisibility();
@@ -40,5 +39,10 @@ export class LazyLoader extends Component {
         image.data('backgroundLoaded', 'true');
       }
     });
+  }
+
+  public static refreshImageList() {
+    LazyLoader.images = $('*[data-hw-src]');
+    LazyLoader.backgroundImages = $('*[data-hw-background-image]');
   }
 }

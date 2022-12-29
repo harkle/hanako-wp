@@ -1,0 +1,19 @@
+{% extends 'structure/html.twig' %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      {% for post in posts %}
+        <div class="col-lg-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ post.title }}</h5>
+              <p class="card-text">{{ post.post_excerpt }}</p>
+              <a href="{{ post.link }}" class="btn btn-primary stretched-link">Read more...</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

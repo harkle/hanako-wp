@@ -1,13 +1,14 @@
 #main-menu {
   @include hw-transition();
 
+  position: fixed;
+  top: 56px;
   right: 0;
-  left: auto;
-  max-width: 200px;
-  transform: translateX(100%);
+  max-height: 0;
+  overflow: hidden;
 
   &.opened {
-    transform: translateX(0);
+    max-height: 100vh;
   }
 }
 
@@ -24,7 +25,7 @@
     left: 50%;
     width: 100%;
     transform: translate(-50%, -50%);
-    border-bottom: 2px solid $black;
+    border-bottom: 2px solid $white;
 
     &:nth-child(1) {
       top: 0;
