@@ -48,8 +48,12 @@ let configBase = {
         exclude: exclude,
         use: [
           MiniCssExtractPlugin.loader,
-          'css-loader',
           {
+            loader: "css-loader",
+            options: {
+              url: false,
+            }
+          }, {
             loader: "postcss-loader",
             options: {
               postcssOptions: {
@@ -112,7 +116,7 @@ console.log('> Entry points');
               filename: 'css/' + filename + '.min.css',
             }),
             new CopyPlugin({
-              patterns: [{ from: 'views/assets/images', to: 'assets/images' }]
+              patterns: [{ from: 'views/assets/', to: 'assets/' }]
             })
           ]
         }

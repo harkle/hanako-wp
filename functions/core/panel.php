@@ -39,6 +39,9 @@ class MySettingsPage {
     $this->options['frontend'] = get_option('abb_options_frontend');
     if (!is_array($this->options['frontend'])) $this->options['frontend'] = array();
 
+    $this->options['menu'] = get_option('abb_options_menu');
+    if (!is_array($this->options['menu'])) $this->options['menu'] = array();
+
     $this->options['backend'] = get_option('abb_options_backend');
     if (!is_array($this->options['backend'])) $this->options['backend'] = array();
 
@@ -60,6 +63,7 @@ class MySettingsPage {
 
       <h2 class="nav-tab-wrapper">
         <a href="?page=abb_options&amp;tab=frontend" class="nav-tab <?php echo $active_tab == 'frontend' ? 'nav-tab-active' : ''; ?>">Frontend</a>
+        <a href="?page=abb_options&amp;tab=menu" class="nav-tab <?php echo $active_tab == 'menu' ? 'nav-tab-active' : ''; ?>">Menu</a>
         <a href="?page=abb_options&amp;tab=backend" class="nav-tab <?php echo $active_tab == 'backend' ? 'nav-tab-active' : ''; ?>">Backend</a>
         <a href="?page=abb_options&amp;tab=timmy" class="nav-tab <?php echo $active_tab == 'timmy' ? 'nav-tab-active' : ''; ?>">Timmy</a>
         <a href="?page=abb_options&amp;tab=cpt" class="nav-tab <?php echo $active_tab == 'cpt' ? 'nav-tab-active' : ''; ?>">Post Types</a>
@@ -72,6 +76,9 @@ class MySettingsPage {
         switch ($active_tab) {
           case 'frontend':
             $this->panel_frontend();
+            break;
+          case 'menu':
+            $this->panel_menu();
             break;
           case 'backend':
             $this->panel_backend();
@@ -100,6 +107,11 @@ class MySettingsPage {
   private function panel_frontend() {
     settings_fields('options_frontend');
     do_settings_sections('options_frontend');
+  }
+
+  private function panel_menu() {
+    settings_fields('options_menu');
+    do_settings_sections('options_menu');
   }
 
   private function panel_backend() {
@@ -162,7 +174,7 @@ class MySettingsPage {
       array('frontend', 'dev_mode', 'Activer le mode développement')
     );
 
-     add_settings_field(
+    add_settings_field(
       'auto_reload',
       'Rechargement automatique',
       array($this, 'checkbox_callback'),
@@ -177,7 +189,7 @@ class MySettingsPage {
       array($this, 'select_callback'),
       'options_frontend',
       'options_frontend_main',
-      array('frontend', 'error_reporting', ['Ne rien afficher', 'Tout afficher', 'Afficher les erreurs', 'Afficher les avertissements', 'Afficher les notices', 'Afficher les déprécié' ])
+      array('frontend', 'error_reporting', ['Ne rien afficher', 'Tout afficher', 'Afficher les erreurs', 'Afficher les avertissements', 'Afficher les notices', 'Afficher les déprécié'])
     );
 
     add_settings_section(
@@ -195,7 +207,7 @@ class MySettingsPage {
       'options_frontend_visibility',
       array('frontend', 'hide_site', 'Masquer le site aux utilisateurs non connectés.')
     );
-    
+
     add_settings_field(
       'redirect_to',
       'Redirection',
@@ -214,6 +226,55 @@ class MySettingsPage {
       array('frontend', 'allowed_urls', 'Séparer les urls par des virgules')
     );
 
+    // Menus
+    register_setting(
+      'options_menu',
+      'abb_options_menu',
+      array($this, 'sanitize')
+    );
+
+    add_settings_section(
+      'options_menu_main',
+      'Menu',
+      array($this, 'print_section_info'),
+      'options_menu'
+    );
+
+    add_settings_field(
+      'hidden_menus',
+      'Éléments de menu masqués',
+      array($this, 'textarea_callback'),
+      'options_menu',
+      'options_menu_main',
+      array('menu', 'hidden_menus', '<small>Un élément par ligne</small>')
+    );
+
+    add_settings_field(
+      'hidden_submenus',
+      'Éléments de sous-menu masqués',
+      array($this, 'textarea_callback'),
+      'options_menu',
+      'options_menu_main',
+      array('menu', 'hidden_submenus', '<small>Un élément par ligne</small>')
+    );
+
+    add_settings_field(
+      'menu_order',
+      'Ordres des menus',
+      array($this, 'textarea_callback'),
+      'options_menu',
+      'options_menu_main',
+      array('menu', 'menu_order', '')
+    );
+
+    add_settings_field(
+      'existing_menu_order',
+      'Ordres des menus',
+      array($this, 'textarea_readonly_callback'),
+      'options_menu',
+      'options_menu_main',
+      array('menu', 'existing_menu_order', '')
+    );
 
     //backend
     register_setting(
@@ -490,8 +551,13 @@ class MySettingsPage {
         'redirect_to' => '/wp-admin/'
       ));
 
+      update_option('abb_options_menu', [
+        'hidden_menus' => "tools.php;editor",
+        'hidden_submenus' => "themes.php,theme-editor.php\nthemes.php,themes.php;editor",
+      ]);
+
       update_option('dev_mode', true);
-        
+
       update_option('abb_options_timmy', array(
         'image_sizes' => '{
   "thumbnail": {
@@ -499,7 +565,8 @@ class MySettingsPage {
     "name": "Vignette",
     "post_types": ["all"]
   }
- }'));
+ }'
+      ));
 
       update_option('abb_options_cpt', array(
         'post_types' => "[]",
@@ -534,29 +601,42 @@ class MySettingsPage {
    * Get the settings option array and print one of its values
    */
   public function checkbox_callback($args) {
-    $option = isset($this->options[$args[0]][$args[1]]) ? $this->options[$args[0]][$args[1]] : false; 
-    
+    $option = isset($this->options[$args[0]][$args[1]]) ? $this->options[$args[0]][$args[1]] : false;
+
     echo '<input type="checkbox" id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']" value="1" ' . checked(1, $option, false) . '>';
     echo '<label for="frontend_' . $args[1] . '">' . $args[2] . '</label>';
   }
 
   public function text_callback($args) {
-    $option = isset($this->options[$args[0]][$args[1]]) ? $this->options[$args[0]][$args[1]] : false; 
-    
+    $option = isset($this->options[$args[0]][$args[1]]) ? $this->options[$args[0]][$args[1]] : false;
+
     echo '<input class="large-text" id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']" value="' . $option . '">';
     echo '<label for="frontend_' . $args[1] . '">' . $args[2] . '</label>';
   }
 
   public function textarea_callback($args) {
-    $option = isset($this->options[$args[0]][$args[1]]) ? $this->options[$args[0]][$args[1]] : false; 
-    
+    $option = isset($this->options[$args[0]][$args[1]]) ? $this->options[$args[0]][$args[1]] : false;
+
     echo '<textarea class="large-text code" rows="10" id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']">' . $option . '</textarea>';
     echo '<label for="frontend_' . $args[1] . '">' . $args[2] . '</label>';
   }
 
+  public function textarea_readonly_callback($args) {
+    $option = '';
+
+    if (is_array($GLOBALS[$args[1]])) {
+      foreach ($GLOBALS[$args[1]] as $entry) {
+        $option .= $entry . "\n";
+      }
+    }
+
+    echo '<textarea readonly class="large-text code" rows="10" id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']">' . $option . '</textarea>';
+    echo '<label for="frontend_' . $args[1] . '">' . $args[2] . '</label>';
+  }
+
   public function select_callback($args) {
-    $option = isset($this->options[$args[0]][$args[1]]) ? $this->options[$args[0]][$args[1]] : false; 
-    
+    $option = isset($this->options[$args[0]][$args[1]]) ? $this->options[$args[0]][$args[1]] : false;
+
     echo '<select id="' . $args[0] . '_' . $args[1] . '" name="abb_options_' . $args[0] . '[' . $args[1] . ']">';
     foreach ($args[2] as $key => $value) {
       echo '<option value="' . $key . '" ' . selected($key, $option, false) . '>' . $value . '</option>';

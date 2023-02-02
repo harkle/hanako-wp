@@ -15,7 +15,19 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 29.12.2022
+Last release 02.02.2023
+
+### 1.5.1
+- Hanako-ts 1.2.5
+- No thumbnail for PDF files
+- Disable Site Health widget
+- Remove default theme stylesheet
+- Editors can access Gravity Forms
+- Editors can edit Privacy Policy Page
+- Some admin menu cleaning
+- Add Timmy to composer
+- New setting to hide admin menus items
+- New setting to change menu order
 
 ### 1.5
 - Timber/Twig muss be installed via composer

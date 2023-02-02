@@ -1,21 +1,26 @@
 <?php
 include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 
-/*
- * Allow editors to edit menus
- */
-add_action('admin_init', function() {
-  $role = get_role('editor');
-	$role->add_cap('edit_theme_options');
-});
+function hw_explode_option($option) {
+  $return = [];
+  $option = explode(PHP_EOL, get_abb_option($option));
+
+  if (is_array($option)) {
+    foreach ($option as $key => $value) {
+      $return[$key] = trim($value);
+    }  
+  }
+
+  return $return;
+}
 
 /*
  * Disables WordPress from generating thumbnail images when a PDF is uploaded
  * Code credit to http://www.wpbeginner.com/wp-tutorials/how-to-disable-pdf-thumbnail-previews-in-wordpress/
  */
-add_filter('fallback_intermediate_image_sizes', function() {
-	$fallbacksizes = array(); 
-	return $fallbacksizes; 
+add_filter('fallback_intermediate_image_sizes', function () {
+  $fallbacksizes = array();
+  return $fallbacksizes;
 });
 
 /*
@@ -47,7 +52,9 @@ update_option('large_size_h', 0);
 
 set_post_thumbnail_size(0, 0);
 
-add_filter('jpeg_quality', function() { return 100; });
+add_filter('jpeg_quality', function () {
+  return 100;
+});
 add_filter('big_image_size_threshold', '__return_false');
 add_filter('timmy/generate_srcset_sizes', '__return_true');
 
@@ -58,14 +65,6 @@ if (get_abb_option('image_sizes')) {
     return (is_array($options_sizes)) ? $options_sizes : [];
   });
 }
-
-/*
- * Add editor the privilege to edit theme
- */
-add_action('admin_init', function() {
-  $role = get_role('editor');
-	$role->add_cap('edit_theme_options');
-});
 
 /*
  * Allow svg upload
@@ -296,12 +295,12 @@ add_action('admin_menu', function () {
 /*
  * Site health check
  */
-add_filter('site_status_tests', function($tests) {
+add_filter('site_status_tests', function ($tests) {
   unset($tests['direct']['wordpress_version']);
   unset($tests['direct']['plugin_version']);
   unset($tests['direct']['theme_version']);
   unset($tests['direct']['background_updates']);
-  
+
   unset($tests['async']['background_updates']);
   return $tests;
 });
@@ -309,7 +308,7 @@ add_filter('site_status_tests', function($tests) {
 /*
  * Disable inline styles
  */
-add_action('wp_enqueue_scripts', function() {
+add_action('wp_enqueue_scripts', function () {
   wp_dequeue_style('global-styles');
 }, 100);
 
@@ -326,7 +325,7 @@ function hw_get_dir_contents($dirs, &$results = array(), $ignore_wp_path = false
     foreach ($files as $key => $value) {
       $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
       if (!is_dir($path)) {
-        if (in_array(pathinfo($path, PATHINFO_EXTENSION), ['php', 'twig','js', 'css'])) $results[] = $path;
+        if (in_array(pathinfo($path, PATHINFO_EXTENSION), ['php', 'twig', 'js', 'css'])) $results[] = $path;
       } else if ($value != '.' && $value != '..') {
         hw_get_dir_contents($path, $results, true);
       }
@@ -352,3 +351,104 @@ function hw_get_assets_date() {
 
 add_action('wp_ajax_get_assets_date', 'hw_get_assets_date');
 add_action('wp_ajax_nopriv_get_assets_date', 'hw_get_assets_date');
+
+/*
+ * Disables WordPress from generating thumbnail images when a PDF is uploaded
+ * Code credit to http://www.wpbeginner.com/wp-tutorials/how-to-disable-pdf-thumbnail-previews-in-wordpress/
+ */
+add_filter('fallback_intermediate_image_sizes', function () {
+  $fallbacksizes = array();
+  return $fallbacksizes;
+});
+
+/*
+ * Remove site health dashboard widget
+ */
+add_action('wp_dashboard_setup', function () {
+  remove_meta_box('dashboard_site_health', 'dashboard', 'normal');
+});
+
+/*
+ * Add permissions to editors
+ */
+add_action('after_switch_theme', function () {
+  $role = get_role('editor');
+  $role->add_cap('gform_full_access');
+  $role->add_cap('edit_theme_options');
+});
+
+/*
+ * Remove some menu
+ */
+function hw_check_user_role_list($data = null) {
+  $return = false;
+  $roles = isset($data) ? explode(',', $data) : [];
+
+  if (count($roles) > 0) {
+    foreach ($roles as $role) {
+      if (current_user_can($role)) $return = true;
+    }
+  } else {
+    $return = true;
+  }
+
+  return $return;
+}
+
+add_filter('map_meta_cap', function($caps, $cap, $user_id, $args) {
+  if ('customize' == $cap) return ['do_not_allow'];
+  
+  return $caps;
+}, 10, 4);
+
+add_action('admin_menu', function () {
+  $hidden_menus = hw_explode_option('hidden_menus');
+
+  if (is_array($hidden_menus)) {
+    foreach ($hidden_menus as $hidden_menu) {
+      $data = explode(';', $hidden_menu);
+
+      if (hw_check_user_role_list($data[1])) remove_menu_page($data[0]);
+    }
+  }
+
+  $hidden_submenus = hw_explode_option('hidden_submenus');
+  if (is_array($hidden_submenus)) {
+    foreach ($hidden_submenus as $hidden_submenu) {
+      $data = explode(';', $hidden_submenu);
+      $data[0] = explode(',', $data[0]);
+
+      if (hw_check_user_role_list($data[1])) remove_submenu_page($data[0][0], $data[0][1]);
+    }
+  }
+}, 999);
+
+/*
+ * Allow editors to edit privacy page
+ */
+add_action('map_meta_cap', function ($caps, $cap, $user_id, $args) {
+  if (!is_user_logged_in()) return $caps;
+
+  if ('manage_privacy_options' === $cap) {
+    $manage_name = is_multisite() ? 'manage_network' : 'manage_options';
+    $caps = array_diff($caps, [$manage_name]);
+  }
+  return $caps;
+}, 1, 4);
+
+
+add_filter('custom_menu_order', 'hw_custom_menu_order', 10, 1);
+add_filter('menu_order', 'hw_custom_menu_order', 10, 1);
+
+function hw_custom_menu_order($original_menu_order) {
+  $GLOBALS['existing_menu_order'] = $original_menu_order;
+  if (!$original_menu_order) return true;
+
+  $menu_order = hw_explode_option('menu_order');
+
+  foreach ($menu_order as $key => $value) {
+    $menu_order[$key] = trim($value);
+  }
+
+  return is_array($menu_order) ? $menu_order : $original_menu_order;
+}

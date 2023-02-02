@@ -1,7 +1,6 @@
 <?php
 use Timber\ImageHelper;
 
-
 /*
  * Timber
  */
@@ -229,3 +228,10 @@ if (!is_admin() && $GLOBALS['pagenow'] !== 'wp-login.php') {
     return $tag;
   });
 }
+
+/*
+ * Remove default theme stylesheet
+ */
+add_action('wp_enqueue_scripts', function() {
+  wp_dequeue_style('classic-theme-styles');
+}, 20);

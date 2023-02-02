@@ -13,6 +13,9 @@ function get_abb_option($key) {
     $frontend = get_option('abb_options_frontend');
     if (!is_array($frontend)) $frontend = array();
 
+    $menu = get_option('abb_options_menu');
+    if (!is_array($menu)) $menu = array();
+
     $backend = get_option('abb_options_backend');
     if (!is_array($backend)) $backend = array();
 
@@ -29,7 +32,7 @@ function get_abb_option($key) {
     $vendor = get_option('abb_options_vendor');
     if (!is_array($vendor)) $vendor = array();
 
-    $abb_options = array_merge($frontend, $backend, $timmy, $cpt, $tinymce, $vendor);
+    $abb_options = array_merge($frontend, $menu, $backend, $timmy, $cpt, $tinymce, $vendor);
   }
 
   return (isset($abb_options[$key])) ? $abb_options[$key] : false;

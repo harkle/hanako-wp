@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ebb829d74e5807ebdb8ac54bf1e97101",
+    "content-hash": "658c2eb2834b4218924334af727b53c5",
     "packages": [
         {
             "name": "altorouter/altorouter",
@@ -210,6 +210,65 @@
                 }
             ],
             "time": "2022-08-20T06:45:11+00:00"
+        },
+        {
+            "name": "mindkomm/timmy",
+            "version": "0.14.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mindkomm/timmy.git",
+                "reference": "600b1cdcb50ab6d56def247933361f5e038062d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mindkomm/timmy/zipball/600b1cdcb50ab6d56def247933361f5e038062d6",
+                "reference": "600b1cdcb50ab6d56def247933361f5e038062d6",
+                "shasum": ""
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0",
+                "php": ">=5.4.0",
+                "timber/timber": "^1.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.0",
+                "wpackagist-plugin/advanced-custom-fields": "5.*",
+                "yoast/phpunit-polyfills": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "functions-images.php",
+                    "functions-deprecated.php"
+                ],
+                "psr-4": {
+                    "Timmy\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lukas Gaechter",
+                    "email": "lukas.gaechter@mind.ch",
+                    "homepage": "https://www.mind.ch"
+                }
+            ],
+            "description": "Advanced image manipulation for Timber.",
+            "keywords": [
+                "images",
+                "responsive",
+                "timber",
+                "timmy",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/mindkomm/timmy/issues",
+                "source": "https://github.com/mindkomm/timmy"
+            },
+            "time": "2022-03-01T14:52:16+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -735,5 +794,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }
