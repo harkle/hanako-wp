@@ -18,7 +18,7 @@ To add a new page/module/resource, etc. (using hanako-cli)
 Last release 16.03.2023
 
 ### 1.5.2
-- Hanako-ts 1.2.6
+- Hanako-ts 1.2.7
 - Bootstrap 5.2.3
 - Remove debug.scss
 - Rename RGDPConsent in CookiesConsent
