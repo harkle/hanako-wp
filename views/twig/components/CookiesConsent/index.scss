@@ -1,4 +1,4 @@
-#ab-rgpb-consent {
+#hw-cookies-consent {
   z-index: 1000000 !important;
   padding: 10px;
   background-color: $light;
@@ -6,7 +6,7 @@
   font-size: .75rem;
   text-align: center;
 
-  #ab-rgpb-close {
+  #hw-cookies-close {
     top: calc(50% - 2px);
     right: 15px;
     transform: translateY(-50%);
@@ -14,7 +14,7 @@
     text-decoration: none;
   }
 
-  .ab-grpd-link {
+  .hw-cookies-link {
     color: $dark;
     text-decoration: underline !important;
   }

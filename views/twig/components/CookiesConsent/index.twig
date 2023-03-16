@@ -1,0 +1,18 @@
+<div id="hw-cookies-consent" class="fixed-bottom d-none" class="ab-pop-up-wrapper">
+  <div id="hw-cookies-consent-introduction">
+    <p>
+      {{ _e('This site uses cookies to analyse traffic', 'hw-theme') }}
+      (<a class="hw-cookies-link" href="{{ function('get_privacy_policy_url') }}">{{ __('More information', 'hw-theme') }}</a>).
+      {{ _e('Please let us know if you agree to these cookies', 'hw-theme') }}: 
+      <a id="hw-cookies-btn-agree" class="hw-cookies-link" href="#">{{ __('Agree', 'hw-theme') }}</a>
+      <a id="hw-cookies-btn-configure" class="hw-cookies-link" href="#">{{ __('Configure', 'hw-theme') }}</a>
+    </p>
+  </div>
+  <div id="hw-cookies-consent-details" class="d-none">
+    {{ function('do_shortcode', '[matomo_opt_out language=fr]') }}
+    <p>
+      <a id="hw-cookies-btn-close" class="hw-cookies-link" href="#">{{ __('Ok', 'hw-theme') }}</a>
+    </p>
+  </div>
+  <a href="#" id="hw-cookies-close" class="position-absolute">×</span>
+</div>

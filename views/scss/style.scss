@@ -1,7 +1,6 @@
-$html-font-size: 15px;
-
 @import 'utilities/transitions';
-@import 'utilities/debug';
+
+@import '../twig/pages/template-demo/options';
 
 @import 'bootstrap/custom';
 

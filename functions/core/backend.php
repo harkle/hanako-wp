@@ -406,6 +406,8 @@ add_action('admin_menu', function () {
 
   if (is_array($hidden_menus)) {
     foreach ($hidden_menus as $hidden_menu) {
+      if ($hidden_menu === '') continue;
+
       $data = explode(';', $hidden_menu);
 
       if (hw_check_user_role_list($data[1])) remove_menu_page($data[0]);
@@ -415,6 +417,8 @@ add_action('admin_menu', function () {
   $hidden_submenus = hw_explode_option('hidden_submenus');
   if (is_array($hidden_submenus)) {
     foreach ($hidden_submenus as $hidden_submenu) {
+      if ($hidden_menu === '') continue;
+
       $data = explode(';', $hidden_submenu);
       $data[0] = explode(',', $data[0]);
 

@@ -2,6 +2,17 @@
 $utilities: map-merge(
   $utilities,
   (
+    'position': (
+      property: position,
+      values: static relative absolute fixed sticky,
+      responsive: true
+    ),
+    'border-width': (
+      property: border-width,
+      class: border,
+      values: $border-widths,
+      responsive: true
+    ),
     'text': (
       property: color,
       class: text,
