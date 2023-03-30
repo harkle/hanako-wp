@@ -16,9 +16,11 @@
 @import 'variables/buttons-forms';
 @import 'variables/buttons';
 @import 'variables/forms';
+@import 'variables/colors-dark';
 
 /* 3. Include remainder of required Bootstrap stylesheets */
 @import "../../../node_modules/bootstrap/scss/variables";
+@import "../../../node_modules/bootstrap/scss/variables-dark";
 
 /* 4. Include any default map overrides here */
 @import 'maps';
@@ -42,7 +44,7 @@
 //@import '../../../node_modules/bootstrap/scss/forms';
 @import '../../../node_modules/bootstrap/scss/buttons';
 @import '../../../node_modules/bootstrap/scss/transitions';
-//@import '../../../node_modules/bootstrap/scss/dropdown';
+@import '../../../node_modules/bootstrap/scss/dropdown';
 //@import '../../../node_modules/bootstrap/scss/button-group';
 //@import '../../../node_modules/bootstrap/scss/nav';
 @import '../../../node_modules/bootstrap/scss/navbar';

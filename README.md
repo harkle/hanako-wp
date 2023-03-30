@@ -15,7 +15,12 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 16.03.2023
+Last release 30.03.2023
+
+### 1.5.3
+- Update npm packages
+- Bootstrap 5.3
+- Add support for dark mode
 
 ### 1.5.2
 - Hanako-ts 1.2.7

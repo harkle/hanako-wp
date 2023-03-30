@@ -1,11 +1,15 @@
 <header class="navbar navbar-dark hw-scrollspy-header fixed-top bg-primary">
   <div class="container">
-       <a href="{{ site.url }}" class="navbar-brand">{{ site.title }}</a>
+    <a href="{{ site.url }}" class="navbar-brand">{{ site.title }}</a>
 
-        <a href="#" id="button-toggle-menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </a>
+    <div class="d-flex align-items-center">
+      {% include 'components/DarkMode/index.twig' %}
+      
+      <a href="#" id="button-toggle-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </a>
+    </div>
   </div>
 </header>

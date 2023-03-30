@@ -68,6 +68,9 @@ $colors: (
 // See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
 $min-contrast-ratio:   4.5;
 
+$red-300: tint-color($red, 40%);
+$green-300: tint-color($green, 40%);
+
 // Customize the light and dark text colors for use in our color contrast function.
 $color-contrast-dark:      $black;
 $color-contrast-light:     $white;
@@ -95,3 +98,5 @@ $theme-colors: (
   "dark":       $dark
 );
 // scss-docs-end theme-colors-map
+
+$code-color: $pink;

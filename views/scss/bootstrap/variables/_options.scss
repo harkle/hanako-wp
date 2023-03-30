@@ -1,17 +1,13 @@
-// Options
-//
-// Quickly modify global styling by enabling or disabling optional features.
-
 $enable-caret:                true;
 $enable-rounded:              true;
 $enable-shadows:              false;
 $enable-gradients:            false;
 $enable-transitions:          true;
 $enable-reduced-motion:       true;
-$enable-smooth-scroll:        false;
+$enable-smooth-scroll:        true;
 $enable-grid-classes:         true;
 $enable-container-classes:    true;
-$enable-grid-classes:         false;
+$enable-cssgrid:              false;
 $enable-button-pointers:      true;
 $enable-rfs:                  false;
 $enable-validation-icons:     true;
@@ -19,7 +15,8 @@ $enable-negative-margins:     false;
 $enable-deprecation-messages: true;
 $enable-important-utilities:  true;
 
-// Prefix for :root CSS variables
+$enable-dark-mode:            true;
+$color-mode-type:             data;
 
-$variable-prefix:             bs-; // Deprecated in v5.2.0 for the shorter `$prefix`
+$variable-prefix:             bs-;
 $prefix:                      $variable-prefix;

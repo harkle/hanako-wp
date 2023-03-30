@@ -1,0 +1,34 @@
+.bi {
+  &-color-theme-light {
+    background-image: url('../../dist/assets/icons/sun-fill.svg');
+  }
+
+  &-color-theme-dark {
+    background-image: url('../../dist/assets/icons/moon-stars-fill.svg');
+  }
+
+  &-color-theme-auto {
+    background-image: url('../../dist/assets/icons/circle-half.svg');
+  }
+}
+
+.theme-icon-active {
+  filter: invert(1);
+}
+
+#bd-theme {
+  color: $white;
+
+  .bi {
+    margin-right: 5px;
+  }
+
+  & + ul .bi {
+    margin-right: 10px;
+    opacity: .5;
+
+    [data-bs-theme='dark'] & {
+      filter: invert(1);
+    }
+  }
+}
