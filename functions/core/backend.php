@@ -33,7 +33,7 @@ add_filter('use_block_editor_for_post', '__return_false');
  */
 if (!defined('WP_AUTO_UPDATE_CORE')) {
   add_action('admin_notices', function () {
-    echo '<div class="error notice"><p>' . __('Please add the following line to your wp-config.php file.<pre>define(\'WP_AUTO_UPDATE_CORE\', false);</pre>', 'abb') . '</p></div>';
+    echo '<div class="error notice"><p>' . __('Please add the following line to your wp-config.php file.<pre>define(\'WP_AUTO_UPDATE_CORE\', \'minor\');</pre>', 'abb') . '</p></div>';
   });
 }
 
