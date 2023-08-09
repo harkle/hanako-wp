@@ -175,8 +175,10 @@ function hw_lazy_background_image($image, $size) {
  * add some useful functions
  */
 add_filter('timber/twig', function ($twig) {
-  $twig->addFunction(new Timber\Twig_Function('the_permalink', 'get_the_permalink'));
+  $twig->addFunction(new Timber\Twig_Function('get_permalink', 'get_the_permalink'));
 
+  $twig->addFunction(new Timber\Twig_Function('get_field', 'get_field'));
+  
   $twig->addFunction(new Timber\Twig_Function('print_r', 'print_r'));
 
   $twig->addFunction(new Timber\Twig_Function('asset', 'hw_asset'));

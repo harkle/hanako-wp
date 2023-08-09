@@ -1,5 +1,5 @@
 #hw-cookies-consent {
-  z-index: 1000000 !important;
+  z-index: 1049 !important;
   padding: 10px;
   background-color: $light;
   font-family: Helvetica, Arial, sans-serif;
@@ -14,13 +14,31 @@
     text-decoration: none;
   }
 
+  a {
+    color: $primary;
+  }
+
   .hw-cookies-link {
-    color: $dark;
+    margin-right: 5px;
+    margin-left: 5px;
+    color: $gray-600;
     text-decoration: underline !important;
+
+    &.hw-cookies-btn-agree {
+      color: $primary;
+    }
   }
 
   p {
     margin: 0;
     color: $dark;
   }
+
+  #hw-cookies-consent-details > div {
+    width: fit-content;
+  }
+}
+
+.hw-cookies-setting-description {
+  padding-right: 15px;
 }

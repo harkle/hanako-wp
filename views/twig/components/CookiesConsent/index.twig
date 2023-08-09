@@ -1,18 +1,36 @@
-<div id="hw-cookies-consent" class="fixed-bottom d-none" class="ab-pop-up-wrapper">
+<div id="hw-cookies-consent" class="fixed-bottom d-none" class="ab-pop-up-wrapper" data-mode="{{ get_field('cookies_mode', 'options') }}">
   <div id="hw-cookies-consent-introduction">
     <p>
-      {{ _e('This site uses cookies to analyse traffic', 'hw-theme') }}
-      (<a class="hw-cookies-link" href="{{ function('get_privacy_policy_url') }}">{{ __('More information', 'hw-theme') }}</a>).
-      {{ _e('Please let us know if you agree to these cookies', 'hw-theme') }}: 
-      <a id="hw-cookies-btn-agree" class="hw-cookies-link" href="#">{{ __('Agree', 'hw-theme') }}</a>
-      <a id="hw-cookies-btn-configure" class="hw-cookies-link" href="#">{{ __('Configure', 'hw-theme') }}</a>
+      {{ get_field('cookies_text', 'options') }}
+      <a class="hw-cookies-link hw-cookies-btn-configure" href="#">{{ __('Configure', 'hw-theme') }}</a>
+      <a class="hw-cookies-link hw-cookies-btn-agree" href="#">{{ __('Accept all', 'hw-theme') }}</a>
     </p>
   </div>
-  <div id="hw-cookies-consent-details" class="d-none">
-    {{ function('do_shortcode', '[matomo_opt_out language=fr]') }}
-    <p>
-      <a id="hw-cookies-btn-close" class="hw-cookies-link" href="#">{{ __('Ok', 'hw-theme') }}</a>
-    </p>
-  </div>
-  <a href="#" id="hw-cookies-close" class="position-absolute">×</span>
 </div>
+
+<div id="hw-cookies-consent-modal" class="modal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ __('Cookies consent', 'hw-theme') }}</h5>
+      </div>
+      <div class="modal-body">
+        {% for setting in get_field('cookies_settings', 'options') %}
+          <div class="d-flex align-items-center">
+            <div class="hw-cookies-setting-description flex-grow-1">
+              <h6>{{ setting.title }}</h6>
+              {{ setting.text }}
+            </div>
+            <div>
+              <div class="form-check form-switch">
+                <input class="hw-cookies-setting-switch form-check-input" type="checkbox" role="switch" data-key="{{ setting.key }}" {{ setting.mandatory ? 'checked disabled' : '' }}>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary hw-cookies-btn-close-modal" data-bs-dismiss="modal">{{ __('Close', 'hw-theme') }}</button>
+      </div>
+    </div>
+  </div>
