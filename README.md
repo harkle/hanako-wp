@@ -20,6 +20,7 @@ Last release 09.08.2023
 ### 1.5.4
 - RGPD & LPD cookies wall
 - WP_AUTO_UPDATE_CORE -> minor
+- Fix "taxonomies/taxonomy" misspelling
 
 ### 1.5.3
 - Update npm packages
