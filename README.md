@@ -15,7 +15,11 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 30.03.2023
+Last release 09.08.2023
+
+### 1.5.4
+- RGPD & LPD cookies wall
+- WP_AUTO_UPDATE_CORE -> minor
 
 ### 1.5.3
 - Update npm packages

@@ -419,19 +419,19 @@ class MySettingsPage {
 
     add_settings_section(
       'options_cpt_tax',
-      'Taxnomies',
+      'Taxonomies',
       array($this, 'print_section_info'),
       'options_cpt'
     );
 
 
     add_settings_field(
-      'taxnomies',
+      'taxonomies',
       'Liste des taxonomies',
       array($this, 'textarea_callback'),
       'options_cpt',
       'options_cpt_tax',
-      array('cpt', 'taxnomies', "<pre>[{\n  \"name\": \"taxonomy_name\",\n  \"post_type\": \"posttype_name\",\n  \"data\": {\n    \"label\": \"Nom\",\n    \"hierarchical\": true\n  }\n}]</pre>")
+      array('cpt', 'taxonomies', "<pre>[{\n  \"name\": \"taxonomy_name\",\n  \"post_type\": \"posttype_name\",\n  \"data\": {\n    \"label\": \"Nom\",\n    \"hierarchical\": true\n  }\n}]</pre>")
     );
 
     //tinymce
@@ -570,7 +570,7 @@ class MySettingsPage {
 
       update_option('abb_options_cpt', array(
         'post_types' => "[]",
-        'taxnomies' => "[]"
+        'taxonomies' => "[]"
       ));
 
       update_option('abb_options_tinymce', array(

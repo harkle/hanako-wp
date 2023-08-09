@@ -234,11 +234,11 @@ if (get_abb_option('post_types')) {
     }
   }
 
-  $taxnomies = json_decode(get_abb_option('taxnomies'), true);
+  $taxonomies = json_decode(get_abb_option('taxonomies'), true);
 
-  if (is_array($taxnomies)) {
-    foreach ($taxnomies as $taxnomy) {
-      register_taxonomy($taxnomy['name'], $taxnomy['post_type'], $taxnomy['data']);
+  if (is_array($taxonomies)) {
+    foreach ($taxonomies as $taxonomy) {
+      register_taxonomy($taxonomy['name'], $taxonomy['post_type'], $taxonomy['data']);
     }
   }
 }
