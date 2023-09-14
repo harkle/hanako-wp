@@ -70,7 +70,7 @@ if (!class_exists('Timmy\Timmy')) {
 
   return;
 } else {
-  new Timmy\Timmy();
+  Timmy\Timmy::init();
 }
 
 /*

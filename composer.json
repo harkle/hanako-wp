@@ -1,7 +1,7 @@
 {
     "require": {
         "timber/timber": "^1.22",
-        "mindkomm/timmy": "^0.14.9"
+        "mindkomm/timmy": "^1.0"
     },
     "config": {
         "allow-plugins": {

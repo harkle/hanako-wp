@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "658c2eb2834b4218924334af727b53c5",
+    "content-hash": "b981dde3c7e4965716aa291acdb5216e",
     "packages": [
         {
             "name": "altorouter/altorouter",
@@ -213,33 +213,32 @@
         },
         {
             "name": "mindkomm/timmy",
-            "version": "0.14.9",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mindkomm/timmy.git",
-                "reference": "600b1cdcb50ab6d56def247933361f5e038062d6"
+                "reference": "7aa0659f0328a0b57c6cbe67df35f5fdc832e257"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mindkomm/timmy/zipball/600b1cdcb50ab6d56def247933361f5e038062d6",
-                "reference": "600b1cdcb50ab6d56def247933361f5e038062d6",
+                "url": "https://api.github.com/repos/mindkomm/timmy/zipball/7aa0659f0328a0b57c6cbe67df35f5fdc832e257",
+                "reference": "7aa0659f0328a0b57c6cbe67df35f5fdc832e257",
                 "shasum": ""
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0",
-                "php": ">=5.4.0",
-                "timber/timber": "^1.3"
+                "php": ">=7.4.0",
+                "timber/timber": "^1.19"
             },
             "require-dev": {
-                "phpunit/phpunit": "^7.0",
+                "szepeviktor/phpstan-wordpress": "^1.0",
                 "wpackagist-plugin/advanced-custom-fields": "5.*",
-                "yoast/phpunit-polyfills": "^1.0"
+                "yoast/wp-test-utils": "^1.0"
             },
             "type": "library",
             "autoload": {
                 "files": [
-                    "functions-images.php",
-                    "functions-deprecated.php"
+                    "functions-images.php"
                 ],
                 "psr-4": {
                     "Timmy\\": "lib/"
@@ -268,7 +267,7 @@
                 "issues": "https://github.com/mindkomm/timmy/issues",
                 "source": "https://github.com/mindkomm/timmy"
             },
-            "time": "2022-03-01T14:52:16+00:00"
+            "time": "2023-04-06T08:40:30+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
