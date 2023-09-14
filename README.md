@@ -15,7 +15,11 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 09.08.2023
+Last release 14.09.2023
+
+### 1.5.5
+- Add ACF JSON file for CookiesConsent
+- Separate npm dependancies
 
 ### 1.5.4
 - RGPD & LPD cookies wall
