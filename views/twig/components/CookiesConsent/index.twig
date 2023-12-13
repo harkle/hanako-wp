@@ -20,6 +20,11 @@
             <div class="hw-cookies-setting-description flex-grow-1">
               <h6>{{ setting.title }}</h6>
               {{ setting.text }}
+              {% if setting.key == 'traffic' %}
+                <p class="hw-do-not-track-message d-none text-danger small mb-15">
+                  {{ __('Vous avez activé la fonctionnalité «Ne pas suivre» de votre navigateur. Nous ne pouvons donc pas vous proposer d’activer ce cookie.', 'hw-theme') }}
+                </p>
+              {% endif %}
             </div>
             <div>
               <div class="form-check form-switch">

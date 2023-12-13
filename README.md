@@ -15,7 +15,10 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 14.09.2023
+Last release 13.12.2023
+
+### 1.5.6
+- CookiesConsent support «Do not track»
 
 ### 1.5.5
 - Add ACF JSON file for CookiesConsent

@@ -62,6 +62,12 @@ export class CookiesConsent extends Component {
       this.updateSetting(input.data('key'), input.get(0).checked);
     });
 
+    // Do not track
+    if (navigator.doNotTrack) {
+      $('.hw-cookies-setting-switch[data-key="traffic"]').attr('disabled', true);
+      $('.hw-do-not-track-message').removeClass('d-none');
+    }
+    
     this.success();
   }
 
