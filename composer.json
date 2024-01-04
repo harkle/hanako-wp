@@ -1,7 +1,7 @@
 {
     "require": {
-        "timber/timber": "^1.22",
-        "mindkomm/timmy": "^1.0"
+        "timber/timber": "^2.0.0",
+        "mindkomm/timmy": "dev-timber-2.x"
     },
     "config": {
         "allow-plugins": {

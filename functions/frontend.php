@@ -4,7 +4,7 @@
  */
 add_filter('timber/context', function ($context) {
   $context['menus'] = [
-    'main' => new \Timber\Menu('main')
+    'main' => Timber::get_menu('main')
   ];
 
   return $context;
@@ -13,8 +13,10 @@ add_filter('timber/context', function ($context) {
 /*
  * Add some useful functions
  */
-add_filter('timber/twig', function ($twig) {
-  //$twig->addFunction(new Timber\Twig_Function('the_permalink', 'get_the_permalink'));
+add_filter('timber/twig/functions', function ($functions) {
+  /*$functions['function_name'] = [
+    'callable' => 'function_name',
+  ];*/
 
-  return $twig;
+  return $functions;
 });

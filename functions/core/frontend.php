@@ -1,4 +1,5 @@
 <?php
+use Timber\Timber;
 use Timber\ImageHelper;
 
 /*
@@ -17,7 +18,6 @@ if (!class_exists('Timber')) {
   });
 } else {
   Timber::$dirname = ['views/twig'];
-  Timber::$autoescape = false;
 }
 
 /*
@@ -139,7 +139,7 @@ function hw_asset($file) {
  * Image with lazy loading
  */
 function hw_lazy_image($image, $size, $classes = '', $alt = '', $title = '', $data = '') {
-  $timber_image = new Timber\Image($image);
+  $timber_image = Timber::get_image($image);
 
   if (empty($image)) return;
 
@@ -164,7 +164,7 @@ function hw_lazy_image($image, $size, $classes = '', $alt = '', $title = '', $da
  * Image background with lazy loading
  */
 function hw_lazy_background_image($image, $size) {
-  $timber_image = new Timber\Image($image);
+  $timber_image = Timber::get_image($image);
 
   $src = ImageHelper::img_to_webp(get_timber_image_src($timber_image, $size));
 
@@ -174,20 +174,32 @@ function hw_lazy_background_image($image, $size) {
 /*
  * add some useful functions
  */
-add_filter('timber/twig', function ($twig) {
-  $twig->addFunction(new Timber\Twig_Function('get_permalink', 'get_the_permalink'));
+add_filter('timber/twig/functions', function ($functions) {
+  $functions['get_permalink'] = [
+    'callable' => 'get_the_permalink',
+  ];
 
-  $twig->addFunction(new Timber\Twig_Function('get_field', 'get_field'));
-  
-  $twig->addFunction(new Timber\Twig_Function('print_r', 'print_r'));
+  $functions['get_field'] = [
+    'callable' => 'get_field',
+  ];
 
-  $twig->addFunction(new Timber\Twig_Function('asset', 'hw_asset'));
+  $functions['print_r'] = [
+    'callable' => 'print_r',
+  ];
 
-  $twig->addFunction(new Timber\Twig_Function('lazy_image', 'hw_lazy_image'));
+  $functions['asset'] = [
+    'callable' => 'hw_asset',
+  ];
 
-  $twig->addFunction(new Timber\Twig_Function('lazy_background_image', 'hw_lazy_background_image'));
+  $functions['lazy_image'] = [
+    'callable' => 'hw_lazy_image',
+  ];
 
-  return $twig;
+  $functions['lazy_background_image'] = [
+    'callable' => 'hw_lazy_background_image',
+  ];
+
+  return $functions;
 });
 
 /*

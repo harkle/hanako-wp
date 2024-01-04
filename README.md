@@ -15,7 +15,11 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 13.12.2023
+Last release 04.01.2024
+
+### 1.6.0
+- Timber 2.0
+– Updated npm packages
 
 ### 1.5.6
 - CookiesConsent support «Do not track»
