@@ -15,9 +15,10 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 04.01.2024
+Last release 24.01.2024
 
 ### 1.6.1
+
 - remove auto reload
 - remove menu configuration
 - remove post types and taxomies (please use ACF)
@@ -27,27 +28,33 @@ Last release 04.01.2024
 - allow Stipe API even if site in disabled for visitors
 
 ### 1.6.0
+
 - Timber 2.0
 – Updated npm packages
 
 ### 1.5.6
+
 - CookiesConsent support «Do not track»
 
 ### 1.5.5
+
 - Add ACF JSON file for CookiesConsent
 - Separate npm dependancies
 
 ### 1.5.4
+
 - RGPD & LPD cookies wall
 - WP_AUTO_UPDATE_CORE -> minor
 - Fix "taxonomies/taxonomy" misspelling
 
 ### 1.5.3
+
 - Update npm packages
 - Bootstrap 5.3
 - Add support for dark mode
 
 ### 1.5.2
+
 - Hanako-ts 1.2.7
 - Bootstrap 5.2.3
 - Remove debug.scss
@@ -57,6 +64,7 @@ Last release 04.01.2024
 - Change Boostrap default options
 
 ### 1.5.1
+
 - Hanako-ts 1.2.5
 - No thumbnail for PDF files
 - Disable Site Health widget
@@ -69,6 +77,7 @@ Last release 04.01.2024
 - New setting to change menu order
 
 ### 1.5
+
 - Timber/Twig muss be installed via composer
 - Hanako-ts 1.2.4
 - remove "defer" on wp-login.php
@@ -80,31 +89,39 @@ Last release 04.01.2024
 - various functions added to functions/core
 
 ### 1.4.27
+
 - Bootstrap 5.2
 
 ### 1.4.26
+
 - Auto reload and dev mode are now independent
 – PHP Errors reporting can be configured in backend
 
 ### 1.4.25
+
 - Fix an issue with lazy loading image ratio
 
 ### 1.4.19
+
 - Fix issue with defered scripts in admin
 
 ### 1.4.18
+
 - Hanako-ts 1.2.3
 - Bootstrap 5.2 beta
 - defered js loading
 - enhanced console
 
 ### 1.4.17
+
 - Autoreload: php, twig, js, css and images trigger autoreload
 
 ### 1.4.16
+
 - Autoreload: CSS and Javascript modification trigger autoreload
 
 ### 1.4.15
+
 - Remove ACF json save
 – Debug option true by default
 - Whe debug is activate css and js are invalidated on reload by ?time=xxx
@@ -154,6 +171,7 @@ Last release 04.01.2024
 - Add comment disabling in backend options
 
 ### 1.4.5
+
 - Add CSS font smoothing
 - Remove compile .js
 - Set Boostrap to 12 columns
