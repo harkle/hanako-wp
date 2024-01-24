@@ -1,37 +1,37 @@
 <?php
-require_once( __DIR__ . '/../../vendor/autoload.php' );
+require_once(__DIR__ . '/../../vendor/autoload.php');
 
 Timber\Timber::init();
 
-$abb_scripts = array();
-$abb_styles = array();
-$abb_options = array();
+$abb_scripts = [];
+$abb_styles = [];
+$abb_options = [];
 
 function get_abb_option($key) {
   global $abb_options;
 
   if (empty($abb_options)) {
     $frontend = get_option('abb_options_frontend');
-    if (!is_array($frontend)) $frontend = array();
+    if (!is_array($frontend)) $frontend = [];
 
     $menu = get_option('abb_options_menu');
-    if (!is_array($menu)) $menu = array();
+    if (!is_array($menu)) $menu = [];
 
     $backend = get_option('abb_options_backend');
-    if (!is_array($backend)) $backend = array();
+    if (!is_array($backend)) $backend = [];
 
     $cpt = get_option('abb_options_cpt');
-    if (!is_array($cpt)) $cpt = array();
+    if (!is_array($cpt)) $cpt = [];
 
     $timmy = get_option('abb_options_timmy');
 
-    if (!is_array($timmy)) $timmy = array();
+    if (!is_array($timmy)) $timmy = [];
 
     $tinymce = get_option('abb_options_tinymce');
-    if (!is_array($tinymce)) $tinymce = array();
+    if (!is_array($tinymce)) $tinymce = [];
 
     $vendor = get_option('abb_options_vendor');
-    if (!is_array($vendor)) $vendor = array();
+    if (!is_array($vendor)) $vendor = [];
 
     $abb_options = array_merge($frontend, $menu, $backend, $timmy, $cpt, $tinymce, $vendor);
   }
@@ -39,7 +39,6 @@ function get_abb_option($key) {
   return (isset($abb_options[$key])) ? $abb_options[$key] : false;
 }
 
-include_once('acf.php');
 include_once('panel.php');
 include_once('frontend.php');
 include_once('backend.php');
@@ -55,11 +54,10 @@ remove_action('admin_print_styles', 'print_emoji_styles');
 add_action('wp_enqueue_scripts', function () {
   global $abb_scripts, $abb_styles;
 
-  wp_deregister_script('jquery');
   wp_dequeue_style('wp-block-library');
 
   foreach ($abb_styles as $styles) {
-  	wp_register_style($styles[0], $styles[1], false, 1, (!empty($styles[2])) ? $styles[2] : 'all');
+    wp_register_style($styles[0], $styles[1], false, 1, (!empty($styles[2])) ? $styles[2] : 'all');
     wp_enqueue_style($styles[0]);
   }
 
@@ -69,19 +67,21 @@ add_action('wp_enqueue_scripts', function () {
     $in_footer = (isset($script[2])) ? $script[2] : false;
 
     if (!empty($src)) {
-      wp_register_script($handle, $src, array(), false, $in_footer);
-      wp_enqueue_script($handle);  
+      wp_register_script($handle, $src, [], false, $in_footer);
+      wp_enqueue_script($handle);
+    }
+
+    if ($handle == 'hw-scripts') {
+      wp_localize_script($handle, 'HWP', [
+        'template_url' => get_stylesheet_directory_uri(),
+        'ajax_url' => admin_url('admin-ajax.php')
+      ]);
     }
   }
-
-  wp_localize_script($handle, 'WP', [
-    'template_url' => get_stylesheet_directory_uri(),
-    'ajax_url' => admin_url('admin-ajax.php')
-  ]);
 });
 
 /* remove usless stuff */
-add_action('wp_footer', function() {
+add_action('wp_footer', function () {
   wp_dequeue_script('wp-embed');
 });
 
@@ -94,11 +94,11 @@ add_action('admin_notices', function () {
   if (empty($installNotices)) return;
 
   echo '<div class="notice notice-warning"><p>Warning some mandatory plugins are missing.</p><ul>';
-  
+
   foreach ($installNotices as $installNotice) {
     $url = (isset($installNotice['url'])) ? $installNotice['url'] : $installNotice['external_url'];
     $target = (!empty($installNotice['external_url'])) ? 'target="_blank"' : '';
-    echo '<li><a href="' . $url . '" '.$target.'>' . $installNotice['title'] . '</a></li>';
+    echo '<li><a href="' . $url . '" ' . $target . '>' . $installNotice['title'] . '</a></li>';
   }
 
   echo '</ul></div>';
@@ -111,3 +111,20 @@ remove_action('shutdown', 'wp_ob_end_flush_all', 1);
 add_action('shutdown', function () {
   while (@ob_end_flush());
 });
+
+/*
+ * Error reporting
+ */
+if (get_abb_option('error_reporting')) {
+  $error_reporting = get_abb_option('error_reporting');
+
+  ini_set('display_errors', 1);
+
+  if ($error_reporting == 1) error_reporting(E_ALL);
+  if ($error_reporting == 2) error_reporting(E_ERROR);
+  if ($error_reporting == 3) error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
+  if ($error_reporting == 4) error_reporting(E_ALL ^ E_WARNING ^ E_DEPRECATED);
+  if ($error_reporting == 5) error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);
+} else {
+  ini_set('display_errors', 0);
+}

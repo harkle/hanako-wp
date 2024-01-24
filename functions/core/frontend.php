@@ -1,4 +1,5 @@
 <?php
+
 use Timber\Timber;
 use Timber\ImageHelper;
 
@@ -32,34 +33,6 @@ if (get_abb_option('dev_mode')) {
 }
 
 /*
- * Auto reload
- */
-if (get_abb_option('auto_reload')) {
-  add_filter('body_class', function ($classes) {
-    $classes[] =  'auto-reload';
-
-    return $classes;
-  });
-}
-
-/*
- * Error reporting
- */
-if (get_abb_option('error_reporting')) {
-  $error_reporting = get_abb_option('error_reporting');
-
-  ini_set('display_errors', 1);
-
-  if ($error_reporting == 1) error_reporting(E_ALL);
-  if ($error_reporting == 2) error_reporting(E_ERROR);
-  if ($error_reporting == 3) error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
-  if ($error_reporting == 4) error_reporting(E_ALL ^ E_WARNING ^ E_DEPRECATED);
-  if ($error_reporting == 5) error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);
-} else {
-  ini_set('display_errors', 0);
-}
-
-/*
  * Timmy
  */
 if (!class_exists('Timmy\Timmy')) {
@@ -76,10 +49,9 @@ if (!class_exists('Timmy\Timmy')) {
 /*
  * Include
  */
-
 $dev_suffix = (get_abb_option('dev_mode') ? '?time=' . date('U') : '');
-$abb_styles[] = array('abb-styles', get_bloginfo('template_directory') . '/dist/css/style.min.css' . $dev_suffix, false);
-$abb_scripts[] = array('abb-scripts', get_bloginfo('template_directory') . '/dist/js/site.min.js' . $dev_suffix);
+$abb_styles[] = ['hw-styles', get_bloginfo('template_directory') . '/dist/css/style.min.css' . $dev_suffix, false];
+$abb_scripts[] = ['hw-scripts', get_bloginfo('template_directory') . '/dist/js/site.min.js' . $dev_suffix];
 
 $i = 0;
 $externals_scripts = explode("\n", get_abb_option('externals_scripts'));
@@ -87,7 +59,7 @@ if (is_array($externals_scripts)) {
   foreach ($externals_scripts as $external_script) {
     $external_script = str_replace('{template_directory}', get_bloginfo('template_directory'), $external_script);
     $external_script = str_replace('{dev}', $dev_suffix, $external_script);
-    $abb_scripts[] = array('external_' . $i, $external_script);
+    $abb_scripts[] = ['external_' . $i, $external_script];
 
     $i++;
   }
@@ -98,7 +70,7 @@ if (is_array($externals_css)) {
   foreach ($externals_css as $external_css) {
     $external_css = str_replace('{template_directory}', get_bloginfo('template_directory'), $external_css);
     $external_css = str_replace('{dev}', $dev_suffix, $external_css);
-    $abb_styles[] = array('external_' . $i, $external_css);
+    $abb_styles[] = ['external_' . $i, $external_css];
 
     $i++;
   }
@@ -116,19 +88,12 @@ add_action('init', function () {
   if (!is_user_logged_in() && get_abb_option('hide_site') && $GLOBALS['pagenow'] !== 'wp-login.php') {
     $allowed_urls = explode(',', get_abb_option('allowed_urls'));
 
-    if (!in_array($_SERVER['REQUEST_URI'], $allowed_urls) && $_SERVER['REQUEST_URI'] != get_abb_option('redirect_to')) {
+    if (!in_array($_SERVER['REQUEST_URI'], $allowed_urls) && $_SERVER['REQUEST_URI'] != get_abb_option('redirect_to') && !isset($_GET['wc-api'])) {
       wp_redirect(get_abb_option('redirect_to'));
-      die();
+      exit;
     }
   }
 });
-
-/*
- * WPML helpers
- */
-function get_the_original_translation_ID($lang = 'fr') {
-  return icl_object_id(get_the_ID(), get_post_type(), false, $lang);
-}
 
 /* Retrive asset */
 function hw_asset($file) {
@@ -232,7 +197,7 @@ add_action('after_setup_theme', function () {
 if (!is_admin() && $GLOBALS['pagenow'] !== 'wp-login.php') {
   add_filter('style_loader_tag', function ($tag) {
     return str_replace(' href', ' defer href', $tag);
-  
+
     return $tag;
   });
 
@@ -246,6 +211,21 @@ if (!is_admin() && $GLOBALS['pagenow'] !== 'wp-login.php') {
 /*
  * Remove default theme stylesheet
  */
-add_action('wp_enqueue_scripts', function() {
+add_action('wp_enqueue_scripts', function () {
   wp_dequeue_style('classic-theme-styles');
 }, 20);
+
+/*
+ * Remove usless meta & other stuff
+ */
+remove_action('wp_head', 'wp_generator');
+remove_action('wp_head', 'wp_oembed_add_discovery_links');
+remove_action('wp_head', 'rest_output_link_wp_head');
+remove_action('wp_head', 'rsd_link');
+
+/*
+ * Disable inline styles
+ */
+add_action('wp_enqueue_scripts', function () {
+  wp_dequeue_style('global-styles');
+}, 100);

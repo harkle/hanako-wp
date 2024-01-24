@@ -4,7 +4,7 @@ add_filter('acf/fields/wysiwyg/toolbars', function($toolbars) {
 
   if (is_array($toolbars_data)) {
     foreach ($toolbars_data as $toolbar) {
-      $toolbars[$toolbar->title] = array();
+      $toolbars[$toolbar->title] = [];
       $toolbars[$toolbar->title][1] = $toolbar->data;
     }
   }
@@ -21,4 +21,3 @@ add_filter('tiny_mce_before_init', function($init_array) {
 
   return $init_array;
 });
-?>

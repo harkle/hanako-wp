@@ -1,5 +1,4 @@
 import { Analytics } from '../../views/ts/components/Analytics';
-import { AutoReload } from '../../views/ts/components/AutoReload';
 import { CookiesConsent } from '../../views/twig/components/CookiesConsent';
 import { Carousel } from '../../views/ts/components/Carousel';
 import { Collapse } from '../../views/ts/components/Collapse';
@@ -12,7 +11,6 @@ import { Demo } from '../../views/twig/modules/demo';
 
 
 (new Analytics()).init();
-(new AutoReload()).init();
 (new Carousel()).init();
 (new Collapse()).init();
 (new Demo()).init();

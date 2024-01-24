@@ -1,5 +1,5 @@
 <?php
-class MySettingsPage {
+class HW_Settings_Page {
   /**
    * Holds the values to be used in the fields callbacks
    */
@@ -10,8 +10,8 @@ class MySettingsPage {
    */
   public function __construct() {
     $this->set_default_options();
-    add_action('admin_menu', array($this, 'add_plugin_page'));
-    add_action('admin_init', array($this, 'page_init'));
+    add_action('admin_menu', [$this, 'add_plugin_page']);
+    add_action('admin_init', [$this, 'page_init']);
   }
 
   /**
@@ -23,7 +23,7 @@ class MySettingsPage {
       'Configuration',
       'manage_options',
       'abb_options',
-      array($this, 'create_admin_page'),
+      [$this, 'create_admin_page'],
       '',
       2
     );
@@ -37,25 +37,19 @@ class MySettingsPage {
 
     // Set class property
     $this->options['frontend'] = get_option('abb_options_frontend');
-    if (!is_array($this->options['frontend'])) $this->options['frontend'] = array();
-
-    $this->options['menu'] = get_option('abb_options_menu');
-    if (!is_array($this->options['menu'])) $this->options['menu'] = array();
+    if (!is_array($this->options['frontend'])) $this->options['frontend'] = [];
 
     $this->options['backend'] = get_option('abb_options_backend');
-    if (!is_array($this->options['backend'])) $this->options['backend'] = array();
+    if (!is_array($this->options['backend'])) $this->options['backend'] = [];
 
     $this->options['timmy'] = get_option('abb_options_timmy');
-    if (!is_array($this->options['timmy'])) $this->options['timmy'] = array();
-
-    $this->options['cpt'] = get_option('abb_options_cpt');
-    if (!is_array($this->options['cpt'])) $this->options['cpt'] = array();
+    if (!is_array($this->options['timmy'])) $this->options['timmy'] = [];
 
     $this->options['tinymce'] = get_option('abb_options_tinymce');
-    if (!is_array($this->options['tinymce'])) $this->options['tinymce'] = array();
+    if (!is_array($this->options['tinymce'])) $this->options['tinymce'] = [];
 
     $this->options['vendor'] = get_option('abb_options_vendor');
-    if (!is_array($this->options['vendor'])) $this->options['vendor'] = array();
+    if (!is_array($this->options['vendor'])) $this->options['vendor'] = [];
 
 ?>
     <div class="wrap">
@@ -63,10 +57,8 @@ class MySettingsPage {
 
       <h2 class="nav-tab-wrapper">
         <a href="?page=abb_options&amp;tab=frontend" class="nav-tab <?php echo $active_tab == 'frontend' ? 'nav-tab-active' : ''; ?>">Frontend</a>
-        <a href="?page=abb_options&amp;tab=menu" class="nav-tab <?php echo $active_tab == 'menu' ? 'nav-tab-active' : ''; ?>">Menu</a>
         <a href="?page=abb_options&amp;tab=backend" class="nav-tab <?php echo $active_tab == 'backend' ? 'nav-tab-active' : ''; ?>">Backend</a>
         <a href="?page=abb_options&amp;tab=timmy" class="nav-tab <?php echo $active_tab == 'timmy' ? 'nav-tab-active' : ''; ?>">Timmy</a>
-        <a href="?page=abb_options&amp;tab=cpt" class="nav-tab <?php echo $active_tab == 'cpt' ? 'nav-tab-active' : ''; ?>">Post Types</a>
         <a href="?page=abb_options&amp;tab=tinymce" class="nav-tab <?php echo $active_tab == 'tinymce' ? 'nav-tab-active' : ''; ?>">TinyMCE</a>
         <a href="?page=abb_options&amp;tab=vendor" class="nav-tab <?php echo $active_tab == 'vendor' ? 'nav-tab-active' : ''; ?>">Vendor</a>
       </h2>
@@ -77,17 +69,11 @@ class MySettingsPage {
           case 'frontend':
             $this->panel_frontend();
             break;
-          case 'menu':
-            $this->panel_menu();
-            break;
           case 'backend':
             $this->panel_backend();
             break;
           case 'timmy':
             $this->panel_timmy();
-            break;
-          case 'cpt':
-            $this->panel_cpt();
             break;
           case 'tinymce':
             $this->panel_tinymce();
@@ -109,11 +95,6 @@ class MySettingsPage {
     do_settings_sections('options_frontend');
   }
 
-  private function panel_menu() {
-    settings_fields('options_menu');
-    do_settings_sections('options_menu');
-  }
-
   private function panel_backend() {
     settings_fields('options_backend');
     do_settings_sections('options_backend');
@@ -122,11 +103,6 @@ class MySettingsPage {
   private function panel_timmy() {
     settings_fields('options_timmy');
     do_settings_sections('options_timmy');
-  }
-
-  private function panel_cpt() {
-    settings_fields('options_cpt');
-    do_settings_sections('options_cpt');
   }
 
   private function panel_tinymce() {
@@ -146,381 +122,272 @@ class MySettingsPage {
     register_setting(
       'options_frontend',
       'abb_options_frontend',
-      array($this, 'sanitize')
+      [$this, 'sanitize']
     );
 
     add_settings_section(
       'options_frontend_main',
       'Paramètres généraux',
-      array($this, 'print_section_info'),
+      [$this, 'print_section_info'],
       'options_frontend'
     );
 
     add_settings_field(
       'show_admin_bar',
       'Barre d\'administration',
-      array($this, 'checkbox_callback'),
+      [$this, 'checkbox_callback'],
       'options_frontend',
       'options_frontend_main',
-      array('frontend', 'show_admin_bar', 'Activer la barre d\'administration de wordpress')
+      ['frontend', 'show_admin_bar', 'Activer la barre d\'administration de wordpress']
     );
 
     add_settings_field(
       'dev_mode',
       'Mode développement',
-      array($this, 'checkbox_callback'),
+      [$this, 'checkbox_callback'],
       'options_frontend',
       'options_frontend_main',
-      array('frontend', 'dev_mode', 'Activer le mode développement')
-    );
-
-    add_settings_field(
-      'auto_reload',
-      'Rechargement automatique',
-      array($this, 'checkbox_callback'),
-      'options_frontend',
-      'options_frontend_main',
-      array('frontend', 'auto_reload', 'Activer le rechargement automatique')
+      ['frontend', 'dev_mode', 'Activer le mode développement']
     );
 
     add_settings_field(
       'error_reporting',
       'Nivaux d\'erreurs',
-      array($this, 'select_callback'),
+      [$this, 'select_callback'],
       'options_frontend',
       'options_frontend_main',
-      array('frontend', 'error_reporting', ['Ne rien afficher', 'Tout afficher', 'Afficher les erreurs', 'Afficher les avertissements', 'Afficher les notices', 'Afficher les déprécié'])
+      ['frontend', 'error_reporting', ['Ne rien afficher', 'Tout afficher', 'Afficher les erreurs', 'Afficher les avertissements', 'Afficher les notices', 'Afficher les déprécié']]
     );
 
     add_settings_section(
       'options_frontend_visibility',
       'Redirection',
-      array($this, 'print_section_info'),
+      [$this, 'print_section_info'],
       'options_frontend'
     );
 
     add_settings_field(
       'hide_site',
       'Visibilité du site',
-      array($this, 'checkbox_callback'),
+      [$this, 'checkbox_callback'],
       'options_frontend',
       'options_frontend_visibility',
-      array('frontend', 'hide_site', 'Masquer le site aux utilisateurs non connectés.')
+      ['frontend', 'hide_site', 'Masquer le site aux utilisateurs non connectés.']
     );
 
     add_settings_field(
       'redirect_to',
       'Redirection',
-      array($this, 'text_callback'),
+      [$this, 'text_callback'],
       'options_frontend',
       'options_frontend_visibility',
-      array('frontend', 'redirect_to', '')
+      ['frontend', 'redirect_to', '']
     );
 
     add_settings_field(
       'allowed_urls',
       'Adresses autorisées',
-      array($this, 'text_callback'),
+      [$this, 'text_callback'],
       'options_frontend',
       'options_frontend_visibility',
-      array('frontend', 'allowed_urls', 'Séparer les urls par des virgules')
-    );
-
-    // Menus
-    register_setting(
-      'options_menu',
-      'abb_options_menu',
-      array($this, 'sanitize')
-    );
-
-    add_settings_section(
-      'options_menu_main',
-      'Menu',
-      array($this, 'print_section_info'),
-      'options_menu'
-    );
-
-    add_settings_field(
-      'hidden_menus',
-      'Éléments de menu masqués',
-      array($this, 'textarea_callback'),
-      'options_menu',
-      'options_menu_main',
-      array('menu', 'hidden_menus', '<small>Un élément par ligne</small>')
-    );
-
-    add_settings_field(
-      'hidden_submenus',
-      'Éléments de sous-menu masqués',
-      array($this, 'textarea_callback'),
-      'options_menu',
-      'options_menu_main',
-      array('menu', 'hidden_submenus', '<small>Un élément par ligne</small>')
-    );
-
-    add_settings_field(
-      'menu_order',
-      'Ordres des menus',
-      array($this, 'textarea_callback'),
-      'options_menu',
-      'options_menu_main',
-      array('menu', 'menu_order', '')
-    );
-
-    add_settings_field(
-      'existing_menu_order',
-      'Ordres des menus',
-      array($this, 'textarea_readonly_callback'),
-      'options_menu',
-      'options_menu_main',
-      array('menu', 'existing_menu_order', '')
+      ['frontend', 'allowed_urls', 'Séparer les urls par des virgules']
     );
 
     //backend
     register_setting(
       'options_backend',
       'abb_options_backend',
-      array($this, 'sanitize')
+      [$this, 'sanitize']
     );
 
     add_settings_section(
       'options_backend_main',
       'Paramètres généraux',
-      array($this, 'print_section_info'),
+      [$this, 'print_section_info'],
       'options_backend'
-    );
-
-    add_settings_field(
-      'theme_support_menus',
-      'Menu',
-      array($this, 'checkbox_callback'),
-      'options_backend',
-      'options_backend_main',
-      array('backend', 'theme_support_menus', 'Activer le support des menus')
     );
 
     add_settings_field(
       'add_acf_options',
       'Options ACF',
-      array($this, 'checkbox_callback'),
+      [$this, 'checkbox_callback'],
       'options_backend',
       'options_backend_main',
-      array('backend', 'add_acf_options', 'Activer la page d\'option ACF')
+      ['backend', 'add_acf_options', 'Activer la page d\'option ACF']
     );
 
     add_settings_field(
       'disable_comments',
       'Commentaires',
-      array($this, 'checkbox_callback'),
+      [$this, 'checkbox_callback'],
       'options_backend',
       'options_backend_main',
-      array('backend', 'disable_comments', 'Désactiver les commentaires')
+      ['backend', 'disable_comments', 'Désactiver les commentaires']
     );
 
 
     add_settings_section(
       'options_backend_hide',
       'Eléments à masquer',
-      array($this, 'print_section_info'),
+      [$this, 'print_section_info'],
       'options_backend'
     );
 
     add_settings_field(
       'hide_screen_options',
       'Options d\'écran',
-      array($this, 'checkbox_callback'),
+      [$this, 'checkbox_callback'],
       'options_backend',
       'options_backend_hide',
-      array('backend', 'hide_screen_options', 'Masquer les options d\'écran')
+      ['backend', 'hide_screen_options', 'Masquer les options d\'écran']
     );
 
     add_settings_field(
       'hide_help',
       'Aide',
-      array($this, 'checkbox_callback'),
+      [$this, 'checkbox_callback'],
       'options_backend',
       'options_backend_hide',
-      array('backend', 'hide_help', 'Masquer l\'aide')
+      ['backend', 'hide_help', 'Masquer l\'aide']
     );
 
     add_settings_field(
       'hide_metabox',
       'Masquage metabox',
-      array($this, 'textarea_callback'),
+      [$this, 'textarea_callback'],
       'options_backend',
       'options_backend_hide',
-      array('backend', 'hide_metabox', '<small>Une metabox par ligne</small>')
+      ['backend', 'hide_metabox', '<small>Une metabox par ligne</small>']
     );
 
     add_settings_field(
       'hide_metabox_posttype',
       'Masquage metabox PT',
-      array($this, 'textarea_callback'),
+      [$this, 'textarea_callback'],
       'options_backend',
       'options_backend_hide',
-      array('backend', 'hide_metabox_posttype', '<small>Réccursif pour chaque type de poste. Une metabox par ligne</small>')
+      ['backend', 'hide_metabox_posttype', '<small>Réccursif pour chaque type de poste. Une metabox par ligne</small>']
     );
 
     add_settings_field(
       'hide_css',
       'Masquage CSS',
-      array($this, 'textarea_callback'),
+      [$this, 'textarea_callback'],
       'options_backend',
       'options_backend_hide',
-      array('backend', 'hide_css', '<small>Une query CSS par ligne</small>')
+      ['backend', 'hide_css', '<small>Une query CSS par ligne</small>']
     );
 
     //Timmy
     register_setting(
       'options_timmy',
       'abb_options_timmy',
-      array($this, 'sanitize')
+      [$this, 'sanitize']
     );
 
     add_settings_section(
       'options_timmy_sizes',
       'Configuration des tailles',
-      array($this, 'print_section_info'),
+      [$this, 'print_section_info'],
       'options_timmy'
     );
 
     add_settings_field(
       'image_sizes',
       'Liste des tailles',
-      array($this, 'textarea_callback'),
+      [$this, 'textarea_callback'],
       'options_timmy',
       'options_timmy_sizes',
-      array('timmy', 'image_sizes', "<pre>{\n  \"thumbnail\": {\n    \"resize\": [150, 150],\n    \"name\": \"Thumbnail\",\n    \"post_types\": [\"all\"]\n  }\n}</pre>")
-    );
-
-    //cpt
-    register_setting(
-      'options_cpt',
-      'abb_options_cpt',
-      array($this, 'sanitize')
-    );
-
-    add_settings_section(
-      'options_cpt_cpt',
-      'Post types',
-      array($this, 'print_section_info'),
-      'options_cpt'
-    );
-
-    add_settings_field(
-      'post_types',
-      'Liste des type de postes',
-      array($this, 'textarea_callback'),
-      'options_cpt',
-      'options_cpt_cpt',
-      array('cpt', 'post_types', "<pre>[{\n  \"name\": \"postype_name\",\n  \"data\": {\n    \"labels\": {\n      \"name\": \"Pluriel\",\n      \"singular_name\": \"Singulier\"\n      },\n    \"public\": true,\n    \"has_archive\": true,\n    \"menu_icon\": \"dashicons-icon\",\n    \"supports\": [\"title\"]\n  }\n}]</pre>")
-    );
-
-
-    add_settings_section(
-      'options_cpt_tax',
-      'Taxonomies',
-      array($this, 'print_section_info'),
-      'options_cpt'
-    );
-
-
-    add_settings_field(
-      'taxonomies',
-      'Liste des taxonomies',
-      array($this, 'textarea_callback'),
-      'options_cpt',
-      'options_cpt_tax',
-      array('cpt', 'taxonomies', "<pre>[{\n  \"name\": \"taxonomy_name\",\n  \"post_type\": \"posttype_name\",\n  \"data\": {\n    \"label\": \"Nom\",\n    \"hierarchical\": true\n  }\n}]</pre>")
+      ['timmy', 'image_sizes', "<pre>{\n  \"thumbnail\": {\n    \"resize\": [150, 150],\n    \"name\": \"Thumbnail\",\n    \"post_types\": [\"all\"]\n  }\n}</pre>"]
     );
 
     //tinymce
     register_setting(
       'options_tinymce',
       'abb_options_tinymce',
-      array($this, 'sanitize')
+      [$this, 'sanitize']
     );
 
     add_settings_section(
       'options_tinymce_main',
       'Paramètres',
-      array($this, 'print_section_info'),
+      [$this, 'print_section_info'],
       'options_tinymce'
     );
 
     add_settings_field(
       'paste_as_text',
       'Coller',
-      array($this, 'checkbox_callback'),
+      [$this, 'checkbox_callback'],
       'options_tinymce',
       'options_tinymce_main',
-      array('tinymce', 'paste_as_text', 'Coller comme texte')
+      ['tinymce', 'paste_as_text', 'Coller comme texte']
     );
 
     add_settings_field(
       'block_formats',
       'Formats',
-      array($this, 'text_callback'),
+      [$this, 'text_callback'],
       'options_tinymce',
       'options_tinymce_main',
-      array('tinymce', 'block_formats', '')
+      ['tinymce', 'block_formats', '']
     );
 
     add_settings_field(
       'style_formats',
       'Styles',
-      array($this, 'textarea_callback'),
+      [$this, 'textarea_callback'],
       'options_tinymce',
       'options_tinymce_main',
-      array('tinymce', 'style_formats', '')
+      ['tinymce', 'style_formats', '']
     );
 
     add_settings_section(
       'options_tinymce_toolbars',
       'Barres d\'outils',
-      array($this, 'print_section_info'),
+      [$this, 'print_section_info'],
       'options_tinymce'
     );
 
     add_settings_field(
       'toolbars',
       'Barres d\'outils',
-      array($this, 'textarea_callback'),
+      [$this, 'textarea_callback'],
       'options_tinymce',
       'options_tinymce_toolbars',
-      array('tinymce', 'toolbars', '<small>Une barre d\'outil par ligne.</small>')
+      ['tinymce', 'toolbars', '<small>Une barre d\'outil par ligne.</small>']
     );
 
     //vendor
     register_setting(
       'options_vendor',
       'abb_options_vendor',
-      array($this, 'sanitize')
+      [$this, 'sanitize']
     );
 
     add_settings_section(
       'options_vendor_externals',
       'Ressources externes',
-      array($this, 'print_section_info'),
+      [$this, 'print_section_info'],
       'options_vendor'
     );
 
     add_settings_field(
       'externals_css',
       'CSS externes',
-      array($this, 'textarea_callback'),
+      [$this, 'textarea_callback'],
       'options_vendor',
       'options_vendor_externals',
-      array('vendor', 'externals_css', '<strong>{template_directory}</strong>: ' . get_bloginfo('template_directory') . '<br><strong>{dev}:</strong> ?time=' . date('U') . '<br><small>Une URL par ligne</small>')
+      ['vendor', 'externals_css', '<strong>{template_directory}</strong>: ' . get_bloginfo('template_directory') . '<br><strong>{dev}:</strong> ?time=' . date('U') . '<br><small>Une URL par ligne</small>']
     );
 
     add_settings_field(
       'externals_scripts',
       'JS externes',
-      array($this, 'textarea_callback'),
+      [$this, 'textarea_callback'],
       'options_vendor',
       'options_vendor_externals',
-      array('vendor', 'externals_scripts', '<strong>{template_directory}</strong>: ' . get_bloginfo('template_directory') . '<br><strong>{dev}:</strong> ?time' . date('U') . '<br><small>Une URL par ligne</small>')
+      ['vendor', 'externals_scripts', '<strong>{template_directory}</strong>: ' . get_bloginfo('template_directory') . '<br><strong>{dev}:</strong> ?time' . date('U') . '<br><small>Une URL par ligne</small>']
     );
   }
 
@@ -545,20 +412,17 @@ class MySettingsPage {
 
       update_option('abb_options_set', true);
 
-      update_option('abb_options_frontend', array(
+      update_option('abb_options_frontend', [
         'hide_site' => true,
+        'dev_mode' => true,
+        'error_reporting' => 1,
         'allowed_urls' => '/wp-admin/',
         'redirect_to' => '/wp-admin/'
-      ));
-
-      update_option('abb_options_menu', [
-        'hidden_menus' => "tools.php;editor",
-        'hidden_submenus' => "themes.php,theme-editor.php\nthemes.php,themes.php;editor",
       ]);
 
       update_option('dev_mode', true);
 
-      update_option('abb_options_timmy', array(
+      update_option('abb_options_timmy', [
         'image_sizes' => '{
   "thumbnail": {
     "resize": [150, 150],
@@ -566,28 +430,22 @@ class MySettingsPage {
     "post_types": ["all"]
   }
  }'
-      ));
+      ]);
 
-      update_option('abb_options_cpt', array(
-        'post_types' => "[]",
-        'taxonomies' => "[]"
-      ));
-
-      update_option('abb_options_tinymce', array(
+      update_option('abb_options_tinymce', [
         'toolbars' => "[\n  {\n    \"title\": \"Simple\",\n    \"data\": [\"formatselect\", \"styleselect\", \"bold\" , \"italic\" , \"bullist\", \"numlist\", \"outdent\", \"indent\", \"link\", \"unlink\", \"undo\", \"redo\", \"removeformat\"]\n  }, {\n    \"title\": \"Links\",\n    \"data\": [\"link\", \"unlink\", \"undo\", \"redo\", \"removeformat\"]\n  }\n]",
         'paste_as_text' => true,
         'block_formats' => 'Paragraphe=p;Sous-titre=h2',
         'style_formats' => "[\n  {\n    \"title\": \"Style 1\",\n    \"block\": \"p\",\n    \"classes\": \"\"\n  }\n]"
-      ));
+      ]);
 
-      update_option('abb_options_backend', array(
-        'theme_support_menus' => true,
+      update_option('abb_options_backend', [
         'disable_comments' => true,
         'hide_screen_options' => true,
         'hide_metabox' => "itsec-dashboard-widget,dashboard,side,\nrg_forms_dashboard,dashboard, side\nlinkxfndiv,link,normal\nlinkadvanceddiv,link,normal'\ndashboard_quick_press,dashboard,side\ndashboard_plugins,dashboard,side\ndashboard_incoming_links,dashboard,side\ndashboard_recent_drafts,dashboard,side\nicl_dashboard_widget,dashboard,side\ndashboard_recent_comments,dashboard,normal\ndashboard_activity,dashboard,side\nwpseo-dashboard-overview,dashboard,side\ndashboard_incoming_links,dashboard,normal\ndashboard_primary,dashboard,side\ndashboard_secondary,dashboard,side\ndashboard_right_now,dashboard,side",
         'hide_metabox_posttype' => "categorydiv,side\ncommentsdiv,side\nrevisionsdiv,side\ncryptx,advanced\nrocket_post_exclude,side",
         'hide_css' => "#wp-admin-bar-WPML_ALS img\n.user-rich-editing-wrap\n.user-admin-color-wrap\n.user-comment-shortcuts-wrap\n.user-admin-bar-front-wrap\n.user-language-wrap\n.user-url-wrap\n.user-googleplus-wrap\n.user-twitter-wrap\n.user-facebook-wrap\n.user-description-wrap\n.setting[data-setting=\"description\"]\n.setting[data-setting=\"alt\"]\n.misc-pub-revisions\n#tagsdiv-client"
-      ));
+      ]);
     }
   }
 
@@ -645,5 +503,4 @@ class MySettingsPage {
   }
 }
 
-if (is_admin() && current_user_can('administrator')) new MySettingsPage();
-?>
+if (is_admin() && current_user_can('administrator')) new HW_Settings_Page();

@@ -17,6 +17,15 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 Last release 04.01.2024
 
+### 1.6.1
+- remove auto reload
+- remove menu configuration
+- remove post types and taxomies (please use ACF)
+- clean meta tags
+- correct use of wp localize script
+- remove jquery dequeue
+- allow Stipe API even if site in disabled for visitors
+
 ### 1.6.0
 - Timber 2.0
 – Updated npm packages
@@ -183,7 +192,7 @@ Last release 04.01.2024
 
 ### 1.1.1
 
-Various enhancement 
+Various enhancement
 - add Webpack entry point for editor-style.css
 - update scss file structure
 - add scss file for styling language selector

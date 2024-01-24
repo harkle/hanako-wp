@@ -1,26 +1,10 @@
 <?php
-include_once(ABSPATH . 'wp-admin/includes/plugin.php');
-
-function hw_explode_option($option) {
-  $return = [];
-  $option = explode(PHP_EOL, get_abb_option($option));
-
-  if (is_array($option)) {
-    foreach ($option as $key => $value) {
-      $return[$key] = trim($value);
-    }  
-  }
-
-  return $return;
-}
-
 /*
  * Disables WordPress from generating thumbnail images when a PDF is uploaded
  * Code credit to http://www.wpbeginner.com/wp-tutorials/how-to-disable-pdf-thumbnail-previews-in-wordpress/
  */
 add_filter('fallback_intermediate_image_sizes', function () {
-  $fallbacksizes = array();
-  return $fallbacksizes;
+  return [];
 });
 
 /*
@@ -52,9 +36,7 @@ update_option('large_size_h', 0);
 
 set_post_thumbnail_size(0, 0);
 
-add_filter('jpeg_quality', function () {
-  return 100;
-});
+add_filter('jpeg_quality', function () { return 100; });
 add_filter('big_image_size_threshold', '__return_false');
 add_filter('timmy/generate_srcset_sizes', '__return_true');
 
@@ -71,6 +53,7 @@ if (get_abb_option('image_sizes')) {
  */
 add_filter('upload_mimes', function ($mimes) {
   $mimes['svg'] = 'image/svg+xml';
+
   return $mimes;
 });
 
@@ -158,10 +141,11 @@ add_action('wp_before_admin_bar_render', function () {
 /*
  * Set permalink
  */
-add_action('init', function () {
+add_action('after_switch_theme', function () {
   global $wp_rewrite;
 
   $wp_rewrite->set_permalink_structure('/%postname%/');
+  $wp_rewrite->flush_rules(true);
 });
 
 /*
@@ -187,7 +171,7 @@ add_action('admin_init', function () {
  */
 add_filter('sanitize_file_name', function ($filename) {
   $sanitized_filename = remove_accents($filename);
-  $invalid = array(' ' => '-', '%20' => '-', '_' => '-',);
+  $invalid = [' ' => '-', '%20' => '-', '_' => '-'];
   $sanitized_filename = str_replace(array_keys($invalid), array_values($invalid), $sanitized_filename);
   $sanitized_filename = preg_replace('/[^A-Za-z0-9-\. ]/', '', $sanitized_filename);
   $sanitized_filename = preg_replace('/\.(?=.*\.)/', '', $sanitized_filename);
@@ -202,46 +186,13 @@ add_filter('sanitize_file_name', function ($filename) {
  * Hide CSS
  */
 add_action('admin_head', function () {
-  $css_queries = explode("\n", get_abb_option('hide_css'));
-
-  echo '<style>';
-  $i = 1;
-
-  foreach ($css_queries as $css_query) {
-    echo preg_replace("/\r|\n/", "", $css_query);
-
-    if ($i < count($css_queries)) echo ',';
-    $i++;
-  }
-
-  echo '{ display: none !important; }</style>';
+  echo '<style>' . implode(',', explode(PHP_EOL, get_abb_option('hide_css'))) . '{ display: none !important; }</style>';
 });
 
 /*
  * Enable Theme menus
  */
-if (get_abb_option('theme_support_menus')) add_theme_support('menus');
-
-/*
- * Custom Post Types & taxonomies
- */
-if (get_abb_option('post_types')) {
-  $postTypes = json_decode(get_abb_option('post_types'), true);
-
-  if (is_array($postTypes)) {
-    foreach ($postTypes as $postType) {
-      register_post_type($postType['name'], $postType['data']);
-    }
-  }
-
-  $taxonomies = json_decode(get_abb_option('taxonomies'), true);
-
-  if (is_array($taxonomies)) {
-    foreach ($taxonomies as $taxonomy) {
-      register_taxonomy($taxonomy['name'], $taxonomy['post_type'], $taxonomy['data']);
-    }
-  }
-}
+add_theme_support('menus');
 
 /*
  * ACF option page
@@ -268,6 +219,7 @@ if (get_abb_option('hide_screen_options')) {
 if (get_abb_option('hide_help')) {
   add_filter('contextual_help', function ($old_help, $screen_id, $screen) {
     $screen->remove_help_tabs();
+
     return $old_help;
   }, 999, 3);
 }
@@ -276,15 +228,16 @@ if (get_abb_option('hide_help')) {
  * Remove meta-box
  */
 add_action('admin_menu', function () {
-  $metaboxes = explode("\n", get_abb_option('hide_metabox'));
+  $metaboxes = explode(PHP_EOL, get_abb_option('hide_metabox'));
+
   foreach ($metaboxes as $metabox) {
     $metabox = explode(',', $metabox);
     remove_meta_box($metabox[0], $metabox[1], $metabox[2]);
   }
 
-  $post_types = get_post_types();
-  $metaboxes_posttype = explode("\n", get_abb_option('hide_metabox_posttype'));
-  foreach ($post_types as $post_type) {
+  $metaboxes_posttype = explode(PHP_EOL, get_abb_option('hide_metabox_posttype'));
+
+  foreach (get_post_types() as $post_type) {
     foreach ($metaboxes_posttype as $metabox) {
       $metabox = explode(',', $metabox);
       remove_meta_box($metabox[0], $post_type, $metabox[1]);
@@ -300,65 +253,9 @@ add_filter('site_status_tests', function ($tests) {
   unset($tests['direct']['plugin_version']);
   unset($tests['direct']['theme_version']);
   unset($tests['direct']['background_updates']);
-
   unset($tests['async']['background_updates']);
+
   return $tests;
-});
-
-/*
- * Disable inline styles
- */
-add_action('wp_enqueue_scripts', function () {
-  wp_dequeue_style('global-styles');
-}, 100);
-
-/*
- * Auto reload
- */
-function hw_get_dir_contents($dirs, &$results = array(), $ignore_wp_path = false) {
-  if (!is_array($dirs)) $dirs = [$dirs];
-
-  foreach ($dirs as $dir) {
-    $dir = (!$ignore_wp_path ? get_template_directory() . '/' : '') . $dir;
-    $files = scandir($dir);
-
-    foreach ($files as $key => $value) {
-      $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
-      if (!is_dir($path)) {
-        if (in_array(pathinfo($path, PATHINFO_EXTENSION), ['php', 'twig', 'js', 'css'])) $results[] = $path;
-      } else if ($value != '.' && $value != '..') {
-        hw_get_dir_contents($path, $results, true);
-      }
-    }
-  }
-
-  return $results;
-}
-
-function hw_get_assets_date() {
-  $files = hw_get_dir_contents(['dist', 'views', 'functions', 'models']);
-
-  $modification_time = 0;
-  foreach ($files as $file) {
-    $filetime = filemtime($file);
-
-    if ($filetime > $modification_time) $modification_time = $filetime;
-  }
-
-  echo json_encode($modification_time);
-  die();
-}
-
-add_action('wp_ajax_get_assets_date', 'hw_get_assets_date');
-add_action('wp_ajax_nopriv_get_assets_date', 'hw_get_assets_date');
-
-/*
- * Disables WordPress from generating thumbnail images when a PDF is uploaded
- * Code credit to http://www.wpbeginner.com/wp-tutorials/how-to-disable-pdf-thumbnail-previews-in-wordpress/
- */
-add_filter('fallback_intermediate_image_sizes', function () {
-  $fallbacksizes = array();
-  return $fallbacksizes;
 });
 
 /*
@@ -373,59 +270,10 @@ add_action('wp_dashboard_setup', function () {
  */
 add_action('after_switch_theme', function () {
   $role = get_role('editor');
+
   $role->add_cap('gform_full_access');
   $role->add_cap('edit_theme_options');
 });
-
-/*
- * Remove some menu
- */
-function hw_check_user_role_list($data = null) {
-  $return = false;
-  $roles = isset($data) ? explode(',', $data) : [];
-
-  if (count($roles) > 0) {
-    foreach ($roles as $role) {
-      if (current_user_can($role)) $return = true;
-    }
-  } else {
-    $return = true;
-  }
-
-  return $return;
-}
-
-add_filter('map_meta_cap', function($caps, $cap, $user_id, $args) {
-  if ('customize' == $cap) return ['do_not_allow'];
-  
-  return $caps;
-}, 10, 4);
-
-add_action('admin_menu', function () {
-  $hidden_menus = hw_explode_option('hidden_menus');
-
-  if (is_array($hidden_menus)) {
-    foreach ($hidden_menus as $hidden_menu) {
-      if ($hidden_menu === '') continue;
-
-      $data = explode(';', $hidden_menu);
-
-      if (hw_check_user_role_list($data[1])) remove_menu_page($data[0]);
-    }
-  }
-
-  $hidden_submenus = hw_explode_option('hidden_submenus');
-  if (is_array($hidden_submenus)) {
-    foreach ($hidden_submenus as $hidden_submenu) {
-      if ($hidden_menu === '') continue;
-
-      $data = explode(';', $hidden_submenu);
-      $data[0] = explode(',', $data[0]);
-
-      if (hw_check_user_role_list($data[1])) remove_submenu_page($data[0][0], $data[0][1]);
-    }
-  }
-}, 999);
 
 /*
  * Allow editors to edit privacy page
@@ -437,22 +285,6 @@ add_action('map_meta_cap', function ($caps, $cap, $user_id, $args) {
     $manage_name = is_multisite() ? 'manage_network' : 'manage_options';
     $caps = array_diff($caps, [$manage_name]);
   }
+
   return $caps;
 }, 1, 4);
-
-
-add_filter('custom_menu_order', 'hw_custom_menu_order', 10, 1);
-add_filter('menu_order', 'hw_custom_menu_order', 10, 1);
-
-function hw_custom_menu_order($original_menu_order) {
-  $GLOBALS['existing_menu_order'] = $original_menu_order;
-  if (!$original_menu_order) return true;
-
-  $menu_order = hw_explode_option('menu_order');
-
-  foreach ($menu_order as $key => $value) {
-    $menu_order[$key] = trim($value);
-  }
-
-  return is_array($menu_order) ? $menu_order : $original_menu_order;
-}
