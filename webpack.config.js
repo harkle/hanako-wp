@@ -6,6 +6,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const EventHooksPlugin = require('event-hooks-webpack-plugin');
 
+const version = '1';
+
 let basePath = './';
 let exclude = [];
 
@@ -90,7 +92,7 @@ console.log('> Entry points');
         ...configBase, ...{
           entry: basePath + subFolder + element,
           output: {
-            filename: 'js/' + filename + '.min.js',
+            filename: 'js/' + filename + '-v' + version + '.min.js',
             path: path.resolve(__dirname, basePath + '/dist')
           },
           plugins: [
@@ -107,13 +109,13 @@ console.log('> Entry points');
         ...configBase, ...{
           entry: basePath + subFolder + element,
           output: {
-            filename: filename + '.min.js',
+            filename: filename + '-v' + version + '.min.js',
             path: path.resolve(__dirname, basePath + '/dist'),
             assetModuleFilename: 'assets/[hash][ext][query]'
           },
           plugins: [
             new MiniCssExtractPlugin({
-              filename: 'css/' + filename + '.min.css',
+              filename: 'css/' + filename + '-v' + version + '.min.css',
             }),
             new CopyPlugin({
               patterns: [{ from: 'views/assets/', to: 'assets/' }]

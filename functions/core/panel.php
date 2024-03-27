@@ -42,9 +42,6 @@ class HW_Settings_Page {
     $this->options['backend'] = get_option('abb_options_backend');
     if (!is_array($this->options['backend'])) $this->options['backend'] = [];
 
-    $this->options['timmy'] = get_option('abb_options_timmy');
-    if (!is_array($this->options['timmy'])) $this->options['timmy'] = [];
-
     $this->options['tinymce'] = get_option('abb_options_tinymce');
     if (!is_array($this->options['tinymce'])) $this->options['tinymce'] = [];
 
@@ -58,7 +55,6 @@ class HW_Settings_Page {
       <h2 class="nav-tab-wrapper">
         <a href="?page=abb_options&amp;tab=frontend" class="nav-tab <?php echo $active_tab == 'frontend' ? 'nav-tab-active' : ''; ?>">Frontend</a>
         <a href="?page=abb_options&amp;tab=backend" class="nav-tab <?php echo $active_tab == 'backend' ? 'nav-tab-active' : ''; ?>">Backend</a>
-        <a href="?page=abb_options&amp;tab=timmy" class="nav-tab <?php echo $active_tab == 'timmy' ? 'nav-tab-active' : ''; ?>">Timmy</a>
         <a href="?page=abb_options&amp;tab=tinymce" class="nav-tab <?php echo $active_tab == 'tinymce' ? 'nav-tab-active' : ''; ?>">TinyMCE</a>
         <a href="?page=abb_options&amp;tab=vendor" class="nav-tab <?php echo $active_tab == 'vendor' ? 'nav-tab-active' : ''; ?>">Vendor</a>
       </h2>
@@ -71,9 +67,6 @@ class HW_Settings_Page {
             break;
           case 'backend':
             $this->panel_backend();
-            break;
-          case 'timmy':
-            $this->panel_timmy();
             break;
           case 'tinymce':
             $this->panel_tinymce();
@@ -98,11 +91,6 @@ class HW_Settings_Page {
   private function panel_backend() {
     settings_fields('options_backend');
     do_settings_sections('options_backend');
-  }
-
-  private function panel_timmy() {
-    settings_fields('options_timmy');
-    do_settings_sections('options_timmy');
   }
 
   private function panel_tinymce() {
@@ -208,15 +196,6 @@ class HW_Settings_Page {
     );
 
     add_settings_field(
-      'add_acf_options',
-      'Options ACF',
-      [$this, 'checkbox_callback'],
-      'options_backend',
-      'options_backend_main',
-      ['backend', 'add_acf_options', 'Activer la page d\'option ACF']
-    );
-
-    add_settings_field(
       'disable_comments',
       'Commentaires',
       [$this, 'checkbox_callback'],
@@ -276,29 +255,6 @@ class HW_Settings_Page {
       'options_backend',
       'options_backend_hide',
       ['backend', 'hide_css', '<small>Une query CSS par ligne</small>']
-    );
-
-    //Timmy
-    register_setting(
-      'options_timmy',
-      'abb_options_timmy',
-      [$this, 'sanitize']
-    );
-
-    add_settings_section(
-      'options_timmy_sizes',
-      'Configuration des tailles',
-      [$this, 'print_section_info'],
-      'options_timmy'
-    );
-
-    add_settings_field(
-      'image_sizes',
-      'Liste des tailles',
-      [$this, 'textarea_callback'],
-      'options_timmy',
-      'options_timmy_sizes',
-      ['timmy', 'image_sizes', "<pre>{\n  \"thumbnail\": {\n    \"resize\": [150, 150],\n    \"name\": \"Thumbnail\",\n    \"post_types\": [\"all\"]\n  }\n}</pre>"]
     );
 
     //tinymce
@@ -406,8 +362,8 @@ class HW_Settings_Page {
       update_option('timezone_string', 'Europe/Zurich');
       update_option('default_pingback_flag', 0);
       update_option('thread_comments_depth', 1);
-      update_option('default_ping_status', "closed");
-      update_option('default_comment_status', "closed");
+      update_option('default_ping_status', 'closed');
+      update_option('default_comment_status', 'closed');
       update_option('thread_comments', 0);
 
       update_option('abb_options_set', true);
@@ -421,16 +377,6 @@ class HW_Settings_Page {
       ]);
 
       update_option('dev_mode', true);
-
-      update_option('abb_options_timmy', [
-        'image_sizes' => '{
-  "thumbnail": {
-    "resize": [150, 150],
-    "name": "Vignette",
-    "post_types": ["all"]
-  }
- }'
-      ]);
 
       update_option('abb_options_tinymce', [
         'toolbars' => "[\n  {\n    \"title\": \"Simple\",\n    \"data\": [\"formatselect\", \"styleselect\", \"bold\" , \"italic\" , \"bullist\", \"numlist\", \"outdent\", \"indent\", \"link\", \"unlink\", \"undo\", \"redo\", \"removeformat\"]\n  }, {\n    \"title\": \"Links\",\n    \"data\": [\"link\", \"unlink\", \"undo\", \"redo\", \"removeformat\"]\n  }\n]",

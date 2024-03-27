@@ -24,29 +24,8 @@ if (!defined('WP_AUTO_UPDATE_CORE')) {
 /*
  * image modification
  */
-update_option('thumbnail_size_w', 0);
-update_option('thumbnail_size_h', 0);
-update_option('thumbnail_crop', 1);
-
-update_option('medium_size_w', 0);
-update_option('medium_size_h', 0);
-
-update_option('large_size_w', 0);
-update_option('large_size_h', 0);
-
-set_post_thumbnail_size(0, 0);
-
 add_filter('jpeg_quality', function () { return 100; });
 add_filter('big_image_size_threshold', '__return_false');
-add_filter('timmy/generate_srcset_sizes', '__return_true');
-
-if (get_abb_option('image_sizes')) {
-  add_filter('timmy/sizes', function ($sizes) {
-    $options_sizes = json_decode(get_abb_option('image_sizes'), true);
-
-    return (is_array($options_sizes)) ? $options_sizes : [];
-  });
-}
 
 /*
  * Allow svg upload
@@ -74,7 +53,7 @@ add_action('login_head', function () {
 /*
  * Enable editor style menus
  */
-add_editor_style('dist/css/editor-style.min.css');
+add_editor_style('dist/css/editor-style-v' . ASSETS_VERSION . '.min.css');
 
 /*
  * Message on the dashboard
@@ -193,11 +172,6 @@ add_action('admin_head', function () {
  * Enable Theme menus
  */
 add_theme_support('menus');
-
-/*
- * ACF option page
- */
-if (get_abb_option('add_acf_options')) acf_add_options_page();
 
 /*
  * Disable comments

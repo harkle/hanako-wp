@@ -33,25 +33,11 @@ if (get_abb_option('dev_mode')) {
 }
 
 /*
- * Timmy
- */
-if (!class_exists('Timmy\Timmy')) {
-  $installNotices[] = [
-    'external_url' => 'https://github.com/mindkomm/timmy/releases',
-    'title' => 'Timmy'
-  ];
-
-  return;
-} else {
-  Timmy\Timmy::init();
-}
-
-/*
  * Include
  */
 $dev_suffix = (get_abb_option('dev_mode') ? '?time=' . date('U') : '');
-$abb_styles[] = ['hw-styles', get_bloginfo('template_directory') . '/dist/css/style.min.css' . $dev_suffix, false];
-$abb_scripts[] = ['hw-scripts', get_bloginfo('template_directory') . '/dist/js/site.min.js' . $dev_suffix];
+$abb_styles[] = ['hw-styles', get_bloginfo('template_directory') . '/dist/css/style-v' . ASSETS_VERSION . '.min.css' . $dev_suffix, false];
+$abb_scripts[] = ['hw-scripts', get_bloginfo('template_directory') . '/dist/js/site-v' . ASSETS_VERSION . '.min.js' . $dev_suffix];
 
 $i = 0;
 $externals_scripts = explode("\n", get_abb_option('externals_scripts'));
@@ -110,13 +96,12 @@ function hw_lazy_image($image, $size, $classes = '', $alt = '', $title = '', $da
 
   $ratio = $timber_image->aspect() > 0 ? 100 / $timber_image->aspect : 1;
 
-  if (isset($timber_image->sizes[$size])) {
-    $ratio = 100 / ($timber_image->sizes[$size]['width'] / $timber_image->sizes[$size]['height']);
-  }
+  if (isset($timber_image->sizes[$size])) $ratio = $timber_image->sizes[$size]['height'] != 0 ? 100 / ($timber_image->sizes[$size]['width'] / $timber_image->sizes[$size]['height']) : 0;
 
   $alt = (!empty($alt)) ? $alt : $timber_image->alt;
   $title = (!empty($title)) ? $alt : $timber_image->title;
-  $src = ImageHelper::img_to_webp(get_timber_image_src($timber_image, $size));
+  $src = $timber_image->src($size);
+  $src = ENABLE_WEBP ? ImageHelper::img_to_webp($src) : $src;
 
   $return  = '<div class="ratio ' . $classes . '" style="--bs-aspect-ratio: ' . $ratio . '%;">';
   $return .= '<img data-hw-src="' . $src . '" class="d-block w-100" title="' . $title . '" alt="' . $alt . '" ' . $data . '>';
@@ -131,7 +116,8 @@ function hw_lazy_image($image, $size, $classes = '', $alt = '', $title = '', $da
 function hw_lazy_background_image($image, $size) {
   $timber_image = Timber::get_image($image);
 
-  $src = ImageHelper::img_to_webp(get_timber_image_src($timber_image, $size));
+  $src = $timber_image->src($size);
+  $src = ENABLE_WEBP ? ImageHelper::img_to_webp($src) : $src;
 
   return 'data-hw-background-image="' . $src . '"';
 }

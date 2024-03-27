@@ -15,7 +15,14 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 24.01.2024
+Last release 27.03.2024
+
+### 1.6.2
+- assets versioning to avoid cache issues
+- bootstrap 5.3.3
+- update npm packages
+- remove Timmy
+- remove ACF Options
 
 ### 1.6.1
 

@@ -23,17 +23,13 @@ function get_abb_option($key) {
     $cpt = get_option('abb_options_cpt');
     if (!is_array($cpt)) $cpt = [];
 
-    $timmy = get_option('abb_options_timmy');
-
-    if (!is_array($timmy)) $timmy = [];
-
     $tinymce = get_option('abb_options_tinymce');
     if (!is_array($tinymce)) $tinymce = [];
 
     $vendor = get_option('abb_options_vendor');
     if (!is_array($vendor)) $vendor = [];
 
-    $abb_options = array_merge($frontend, $menu, $backend, $timmy, $cpt, $tinymce, $vendor);
+    $abb_options = array_merge($frontend, $menu, $backend, $cpt, $tinymce, $vendor);
   }
 
   return (isset($abb_options[$key])) ? $abb_options[$key] : false;

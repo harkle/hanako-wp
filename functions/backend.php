@@ -18,3 +18,10 @@ add_filter('wp_kses_allowed_html', function ($tags, $context) {
   }
   return $tags;
 }, 10, 2);
+
+/*
+ * Add custom image sizes
+ */
+add_action('after_setup_theme', function () {
+  //add_image_size('thumbnail-2x', 640, 640, true);
+});
