@@ -262,3 +262,14 @@ add_action('map_meta_cap', function ($caps, $cap, $user_id, $args) {
 
   return $caps;
 }, 1, 4);
+
+/*
+ * Disable wp-json for non logged users
+ */
+add_action('init', function() {
+  if (!is_user_logged_in()) {
+    add_filter('rest_authentication_errors', function() {
+      return new WP_Error('rest_cannot_access', __('Only authenticated users can access the REST API.', 'abb'), array('status' => rest_authorization_required_code()));
+    });
+  }
+});

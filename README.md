@@ -15,7 +15,10 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 27.03.2024
+Last release 16.04.2024
+
+### 1.6.3
+- disable wp-json for non logged users
 
 ### 1.6.2
 - assets versioning to avoid cache issues
