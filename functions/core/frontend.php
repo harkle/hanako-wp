@@ -71,7 +71,7 @@ if (!get_abb_option('show_admin_bar')) add_filter('show_admin_bar', '__return_fa
  * Redirect
  */
 add_action('init', function () {
-  if (!is_user_logged_in() && get_abb_option('hide_site') && $GLOBALS['pagenow'] !== 'wp-login.php') {
+  if (!is_user_logged_in() && get_abb_option('hide_site') && $GLOBALS['pagenow'] !== 'wp-login.php' && !wp_doing_ajax() && strpos($_SERVER['REQUEST_URI'], 'wp-json') === false) {
     $allowed_urls = explode(',', get_abb_option('allowed_urls'));
 
     if (!in_array($_SERVER['REQUEST_URI'], $allowed_urls) && $_SERVER['REQUEST_URI'] != get_abb_option('redirect_to') && !isset($_GET['wc-api'])) {

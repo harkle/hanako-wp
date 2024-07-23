@@ -4,6 +4,6 @@
       <a href="{{ item.link }}" class="d-block text-black text-primary-hover mx-2 {{ item.classes|join(' ') }}">{{ item.title }}</a>
     {% endfor %}
 
-    <!-- {% do action('icl_language_selector') %} -->
+    <!-- {{ function('do_action', 'wpml_add_language_selector') }} -->
   </div>
 </menu>

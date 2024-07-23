@@ -15,7 +15,17 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 16.04.2024
+Last release 23.07.2024
+
+### 1.6.4
+- enhance webpack configuration
+- extract license info from CSS files
+- update CSS details
+- update WPML language selector shortcode
+- allow iTheme Security to access wp-json
+- allow non logged users to make ajax requests and access wp-json
+- update npm packages
+- update composer packages
 
 ### 1.6.3
 - disable wp-json for non logged users

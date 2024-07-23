@@ -5,8 +5,12 @@
   font-smoothing: antialiased;
 }
 
-/*
-.ff-my-font {
-  font-family: 'My Font';
+@mixin fs-regular() {
+  font-size: 16px;
+  line-height: 1.25;
 }
-*/
+
+body,
+.fs-regular {
+  @include fs-regular();
+}

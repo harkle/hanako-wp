@@ -15,12 +15,12 @@ let configBase = {
   mode: 'production',
   devtool: 'source-map',
   watch: true,
-  stats: "minimal",
+  stats: 'errors-only',
   performance: {
     hints: false,
   },
   optimization: {
-    usedExports: true
+    usedExports: true,
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js']
@@ -51,12 +51,12 @@ let configBase = {
         use: [
           MiniCssExtractPlugin.loader,
           {
-            loader: "css-loader",
+            loader: 'css-loader',
             options: {
               url: false,
             }
           }, {
-            loader: "postcss-loader",
+            loader: 'postcss-loader',
             options: {
               postcssOptions: {
                 plugins: function () {
@@ -69,7 +69,9 @@ let configBase = {
           }, {
             loader: 'sass-loader',
             options: {
-              sourceMap: true
+              api: 'modern-compiler',
+              sourceMap: true,
+              webpackImporter: false,
             }
           }
         ]
@@ -86,7 +88,7 @@ console.log('> Entry points');
     const filename = element.replace(extension, '');
 
     if (extension == '.ts') {
-      console.log(element);
+      console.log(`– ${element}`);
 
       configs.push({
         ...configBase, ...{
@@ -103,7 +105,7 @@ console.log('> Entry points');
     }
 
     if (extension == '.scss' && filename[0] != '_') {
-      console.log(element);
+      console.log(`– ${element}`);
 
       configs.push({
         ...configBase, ...{
@@ -126,29 +128,56 @@ console.log('> Entry points');
     }
   });
 });
+console.log('\r\n');
 
-var invalidationDate = new Date();
 configs.forEach((config) => {
   if (config.plugins) {
     config.plugins.push(new EventHooksPlugin({
       'invalid': () => {
         console.log('\r\n');
-        invalidationDate = new Date();
-        console.log('> webpack recompile: ' + invalidationDate.toLocaleTimeString());
+        console.log(`> recompile: ${(new Date()).toLocaleTimeString()}`);
       },
-      'done': () => {
-        let date = new Date();
-        let timeDifference = date.getTime() - invalidationDate.getTime();
-        console.log('> compiled in: ' + timeDifference + 'ms');
+      'done': (stats) => {
+        const time = stats.compilation.endTime - stats.compilation.startTime;
+        const filename = Object.keys(stats.compilation.assets)[0];
+
+        console.log(`> \x1b[32m${time}ms\x1b[0m ${filename}`);
+
         try {
+          // Remove all files in dist folder except index.html
           fs.readdirSync(basePath + 'dist/').forEach(element => {
             if (fs.lstatSync(basePath + 'dist/' + element).isFile() && element != 'index.html') fs.unlinkSync(basePath + 'dist/' + element);
           });
+
+          // Check css files in dist folder and extract licence comments
+          if (path.extname(filename) == '.css') extractLicenceComments(`${basePath}dist/${filename}`);
         } catch (err) {
+          console.error(err);
         }
       }
     }));
   }
 });
+
+/*
+ * A function to extract licence comments from minified css files
+ */
+function extractLicenceComments(file) {
+  const content = fs.readFileSync(file, 'utf8');
+  const comments = content.match(/\/\*![^*]*\*+([^\/*][^*]*\*+)*\//g);
+  const licenseComments = [];
+
+  if (comments) {
+    comments.forEach(comment => {
+      licenseComments.push(comment);
+    });
+
+    // write licence comments to a separate file
+    fs.writeFileSync(`${file}.LICENSE.txt`, licenseComments.join('\r\n'));
+
+    // remove comments from css file
+    fs.writeFileSync(file, content.replace(/\/\*![^*]*\*+([^\/*][^*]*\*+)*\//g, ''));
+  }
+}
 
 module.exports = configs;
