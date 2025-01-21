@@ -15,7 +15,15 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 23.07.2024
+Last release 21.01.2025
+
+### 1.6.5
+- new webpack configuration (faster)
+- fix issue with wp-json and iTheme Security
+- disable WP-Rocket optimizations
+- various small fixes
+- update npm packages
+- update composer packages
 
 ### 1.6.4
 - enhance webpack configuration

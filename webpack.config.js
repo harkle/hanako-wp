@@ -1,167 +1,14 @@
 const fs = require('fs');
 const path = require('path');
-
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const glob = require('glob');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const EventHooksPlugin = require('event-hooks-webpack-plugin');
 
 const version = '1';
 
-let basePath = './';
-let exclude = [];
-
-let configBase = {
-  mode: 'production',
-  devtool: 'source-map',
-  watch: true,
-  stats: 'errors-only',
-  performance: {
-    hints: false,
-  },
-  optimization: {
-    usedExports: true,
-  },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js']
-  },
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        exclude: exclude,
-        use: {
-          loader: 'ts-loader',
-          options: {
-            transpileOnly: false
-          }
-        }
-      }, {
-        test: /\.(png|jpe?g|gif|svg)$/,
-        exclude: exclude,
-        type: 'asset/resource'
-      }, {
-        test: /\.(woff|woff2|ttf|otf|eot)$/,
-        exclude: exclude,
-        type: 'asset/resource'
-      },
-      {
-        test: /\.(scss|css)$/,
-        exclude: exclude,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              url: false,
-            }
-          }, {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: function () {
-                  return [
-                    require('autoprefixer')
-                  ];
-                }
-              }
-            }
-          }, {
-            loader: 'sass-loader',
-            options: {
-              api: 'modern-compiler',
-              sourceMap: true,
-              webpackImporter: false,
-            }
-          }
-        ]
-      }
-    ]
-  }
-};
-
-let configs = [];
-console.log('> Entry points');
-['views/ts/', 'views/scss/'].forEach((subFolder) => {
-  fs.readdirSync(basePath + subFolder).forEach(element => {
-    const extension = path.extname(element);
-    const filename = element.replace(extension, '');
-
-    if (extension == '.ts') {
-      console.log(`– ${element}`);
-
-      configs.push({
-        ...configBase, ...{
-          entry: basePath + subFolder + element,
-          output: {
-            filename: 'js/' + filename + '-v' + version + '.min.js',
-            path: path.resolve(__dirname, basePath + '/dist')
-          },
-          plugins: [
-            new ForkTsCheckerWebpackPlugin(),
-          ]
-        }
-      });
-    }
-
-    if (extension == '.scss' && filename[0] != '_') {
-      console.log(`– ${element}`);
-
-      configs.push({
-        ...configBase, ...{
-          entry: basePath + subFolder + element,
-          output: {
-            filename: filename + '-v' + version + '.min.js',
-            path: path.resolve(__dirname, basePath + '/dist'),
-            assetModuleFilename: 'assets/[hash][ext][query]'
-          },
-          plugins: [
-            new MiniCssExtractPlugin({
-              filename: 'css/' + filename + '-v' + version + '.min.css',
-            }),
-            new CopyPlugin({
-              patterns: [{ from: 'views/assets/', to: 'assets/' }]
-            })
-          ]
-        }
-      });
-    }
-  });
-});
-console.log('\r\n');
-
-configs.forEach((config) => {
-  if (config.plugins) {
-    config.plugins.push(new EventHooksPlugin({
-      'invalid': () => {
-        console.log('\r\n');
-        console.log(`> recompile: ${(new Date()).toLocaleTimeString()}`);
-      },
-      'done': (stats) => {
-        const time = stats.compilation.endTime - stats.compilation.startTime;
-        const filename = Object.keys(stats.compilation.assets)[0];
-
-        console.log(`> \x1b[32m${time}ms\x1b[0m ${filename}`);
-
-        try {
-          // Remove all files in dist folder except index.html
-          fs.readdirSync(basePath + 'dist/').forEach(element => {
-            if (fs.lstatSync(basePath + 'dist/' + element).isFile() && element != 'index.html') fs.unlinkSync(basePath + 'dist/' + element);
-          });
-
-          // Check css files in dist folder and extract licence comments
-          if (path.extname(filename) == '.css') extractLicenceComments(`${basePath}dist/${filename}`);
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    }));
-  }
-});
-
-/*
- * A function to extract licence comments from minified css files
- */
 function extractLicenceComments(file) {
   const content = fs.readFileSync(file, 'utf8');
   const comments = content.match(/\/\*![^*]*\*+([^\/*][^*]*\*+)*\//g);
@@ -180,4 +27,126 @@ function extractLicenceComments(file) {
   }
 }
 
-module.exports = configs;
+module.exports = {
+  mode: 'production',
+  devtool: 'source-map',
+  watch: true,
+  stats: 'errors-only',
+  performance: {
+    hints: false,
+  },
+  optimization: {
+    usedExports: true,
+  },
+  cache: { type: 'filesystem' },
+  entry: {
+    ...Object.fromEntries(
+      glob.sync('./views/ts/*.ts').map(file => [
+        `js/${path.relative('./views/ts', file).replace(/\\/g, '/').replace(/\\.ts$/, '')}`,
+        `./${file}`
+      ])
+    ),
+    ...Object.fromEntries(
+      glob.sync('./views/scss/[^_]*.scss').map(file => [
+        `css/${path.relative('./views/scss', file).replace(/\\/g, '/').replace(/\\.scss$/, '')}`,
+        `./${file}`
+      ])
+    )
+  },
+  output: {
+    filename: (pathData) => {
+      const ext = path.extname(pathData.chunk.name);
+      const name = pathData.chunk.name.replace(/\.(scss|ts)$/, '');
+      return ext === '.ts' ? `${name}-v${version}.min.js` : `${name}-v${version}.min.js`;
+    },
+    path: path.resolve(__dirname, 'dist'),
+    clean: true,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              url: false,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [
+                  require('autoprefixer')(),
+                ],
+              },
+            },
+          },
+          'sass-loader',
+        ],
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['.ts', '.js'],
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: `[name].css`,
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'views/assets',
+          to: 'assets',
+          noErrorOnMissing: true,
+        },
+      ],
+    }),
+    new EventHooksPlugin({
+      'invalid': () => {
+        console.log('\r\n');
+        console.log(`> recompile: ${(new Date()).toLocaleTimeString()}`);
+      },
+      'done': (stats) => {
+        const time = stats.compilation.endTime - stats.compilation.startTime;
+
+        console.log(`> \x1b[32m${time}ms\x1b[0m`);
+        Object.entries(stats.compilation.assets).forEach(asset => {
+
+          try {
+            // if path contain css but file has .js extension, remove it
+            if (path.extname(asset[0]) == '.js' && asset[0].includes('css')) fs.unlinkSync(path.resolve(__dirname, 'dist', asset[0]));
+
+            // if file has .scss.css.map extension, remove it
+            if (path.extname(asset[0]) == '.map' && asset[0].includes('.scss.css')) fs.unlinkSync(path.resolve(__dirname, 'dist', asset[0]));
+
+            // if file has .scss.css extension, rename it to .css
+            if (path.extname(asset[0]) == '.css' && asset[0].includes('.scss.css')) fs.renameSync(path.resolve(__dirname, 'dist', asset[0]), path.resolve(__dirname, 'dist', asset[0].replace('.scss.css', `-v${version}.min.css`)));
+
+            // if file has .css extension, call extractLicenceComments on previously renamed file
+            if (path.extname(asset[0]) == '.css') extractLicenceComments(path.resolve(__dirname, 'dist', asset[0].replace('.scss.css', `-v${version}.min.css`)));
+          } catch (e) { }
+        });
+      }
+    })
+  ],
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin(),
+      new CssMinimizerPlugin({
+        minimizerOptions: {
+          preset: ['default', { discardComments: { removeAll: false } }],
+        },
+      }),
+    ],
+  },
+};

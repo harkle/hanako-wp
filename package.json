@@ -1,6 +1,6 @@
 {
   "name": "hanako-wp",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "A basic wordpress template based on Timber/Twig and Hanako ts framework.",
   "homepage": "https://github.com/harkle/hanako-wp",
   "bugs": {
@@ -8,7 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "webpack": "webpack --config webpack.config.js"
+    "webpack": "webpack --watch"
   },
   "author": {
     "name": "Lionel Tardy",
@@ -17,30 +17,23 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "autoprefixer": "^10.4.16",
-    "chokidar": "^3.5.3",
-    "clean-webpack-plugin": "^4.0.0",
+    "autoprefixer": "^10.4.20",
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.0",
     "event-hooks-webpack-plugin": "^2.3.0",
-    "file-loader": "^6.2.0",
-    "fork-ts-checker-webpack-plugin": "^9.0.2",
-    "html-loader": "^5.0.0",
-    "html-webpack-plugin": "^5.6.0",
-    "mini-css-extract-plugin": "^2.7.6",
+    "glob": "^11.0.1",
+    "mini-css-extract-plugin": "^2.9.2",
     "postcss-loader": "^8.1.1",
-    "postcss-scss": "^4.0.9",
-    "prettier": "3.3.3",
-    "sass": "^1.69.7",
-    "sass-loader": "^14.2.1",
-    "style-loader": "^4.0.0",
-    "stylelint": "^16.1.0",
+    "sass": "^1.83.4",
+    "sass-loader": "^16.0.4",
+    "stylelint": "^16.13.2",
     "stylelint-config-property-sort-order-smacss": "^10.0.0",
     "stylelint-order": "^6.0.4",
-    "ts-loader": "^9.5.1",
-    "typescript": "^5.5.4",
-    "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.7.3",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
   },
   "browserslist": [
     "defaults",

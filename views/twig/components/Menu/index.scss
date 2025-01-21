@@ -7,7 +7,7 @@
   max-height: 0;
   overflow: hidden;
 
-  &.opened {
+  &.is-opened {
     max-height: 100vh;
   }
 }
@@ -40,7 +40,7 @@
     }
   }
 
-  &.active {
+  &.is-active {
     span {
       &:nth-child(1) {
         top: 50%;

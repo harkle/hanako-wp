@@ -11,8 +11,10 @@ export class Menu extends Component {
     await super.init();
 
     $('#button-toggle-menu').on('click', (event: MouseEvent, button: Collection) => {
-      button.toggleClass('active');
-      $('#main-menu').toggleClass('opened');
+      event.preventDefault();
+
+      button.toggleClass('is-active');
+      $('#main-menu').toggleClass('is-opened');
     });
 
     this.success();
