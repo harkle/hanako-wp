@@ -15,7 +15,12 @@ To add a new page/module/resource, etc. (using hanako-cli)
 
 ## Version
 
-Last release 21.01.2025
+Last release 10.06.2025
+
+### 1.6.6
+- update composer and npm packages
+- fix <title> tag issue
+- fix CookiesConsent template and script
 
 ### 1.6.5
 - new webpack configuration (faster)

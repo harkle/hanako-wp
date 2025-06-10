@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{{ site.title }}</title>
+  <title>{{ wp_title ? wp_title ~ ' | ' }}{{ site.title }}</title>
 
   {{ function('wp_head') }}
 </head>

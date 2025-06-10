@@ -42,10 +42,10 @@ export class CookiesConsent extends Component {
       $('.hw-cookies-setting-switch').each((setting: Collection) => {
         if (setting.data('key') === 'technical') return;
         this.settings[setting.data('key')] = setting.get(0).checked = true;
-      });      
+      });
 
       this.saveSettings();
-      this.restoreSettings();  
+      this.restoreSettings();
     });
 
     // Close cookies modal
@@ -67,14 +67,17 @@ export class CookiesConsent extends Component {
       $('.hw-cookies-setting-switch[data-key="traffic"]').attr('disabled', true);
       $('.hw-do-not-track-message').removeClass('d-none');
     }
-    
+
     this.success();
   }
 
   private initSettings() {
     $('.hw-cookies-setting-switch').each((setting: Collection) => {
-      if (setting.data('key') === 'technical') return;
-      this.settings[setting.data('key')] = setting.get(0).checked = this.mode == 'opt-in' ? false : true;
+      let value = setting.get(0).checked = this.mode == 'opt-in' ? false : true;
+      if (setting.data('key') === 'technical') value = true;
+      if (setting.data('key') === 'traffic' && navigator.doNotTrack) value = false;
+
+      this.settings[setting.data('key')] = value
     });
 
     this.saveSettings();
@@ -103,6 +106,6 @@ export class CookiesConsent extends Component {
   }
 
   private triggerSettingChanged(key: string, value: boolean) {
-    $('body').get(0).dispatchEvent(new CustomEvent('hw-cookies-setting-' + key + '-changed', {detail: {isEnabled: value}}));
+    $('body').get(0).dispatchEvent(new CustomEvent('hw-cookies-setting-' + key + '-changed', { detail: { isEnabled: value } }));
   }
 }
