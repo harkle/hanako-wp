@@ -21,16 +21,16 @@ export class Analytics extends Component {
   }
 
   private enableMatomo() {
-    let _paq = (<any>window)._paq = (<any>window)._paq || [];
+    let _paq = ((<any>window)._paq = (<any>window)._paq || []);
 
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     _paq.push(['alwaysUseSendBeacon']);
     _paq.push(['setTrackerUrl', '//dev-local.local/wp-content/plugins/matomo/app/matomo.php']);
     _paq.push(['setSiteId', '1']);
-    
-    const scriptTag = document.createElement('script'); 
-    scriptTag.type = 'text/javascript'; 
+
+    const scriptTag = document.createElement('script');
+    scriptTag.type = 'text/javascript';
     scriptTag.async = true;
     scriptTag.src = '/wp-content/uploads/matomo/matomo.js';
 
@@ -39,16 +39,18 @@ export class Analytics extends Component {
   }
 
   private enableGA() {
-    const scriptTag = document.createElement('script'); 
-    scriptTag.type = 'text/javascript'; 
+    const scriptTag = document.createElement('script');
+    scriptTag.type = 'text/javascript';
     scriptTag.async = true;
     scriptTag.src = 'https://www.googletagmanager.com/gtag/js?id=' + this.GA_ID;
 
     const s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(scriptTag, s);
-    
+
     (<any>window).dataLayer = (<any>window).dataLayer || [];
-    function gtag(name:string, data:any){(<any>(<any>window).dataLayer).push(arguments);}
+    function gtag(name: string, data: any) {
+      (<any>(<any>window).dataLayer).push(arguments);
+    }
     gtag('js', new Date());
     gtag('config', this.GA_ID);
   }

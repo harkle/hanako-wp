@@ -4,7 +4,6 @@ import BS_Carousel from 'bootstrap/js/dist/carousel';
 import { Collection } from 'hanako-ts/dist-legacy/Collection';
 
 export class Carousel extends Component {
-
   constructor() {
     super('Carousel', false);
   }

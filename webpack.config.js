@@ -1,14 +1,17 @@
-const fs = require('fs');
 const path = require('path');
-const glob = require('glob');
+const fs = require('fs');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const WebpackBar = require('webpackbar');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const EventHooksPlugin = require('event-hooks-webpack-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 
 const version = '1';
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
+// Fonction pour extraire les licences CSS
 function extractLicenceComments(file) {
   const content = fs.readFileSync(file, 'utf8');
   const comments = content.match(/\/\*![^*]*\*+([^\/*][^*]*\*+)*\//g);
@@ -19,134 +22,279 @@ function extractLicenceComments(file) {
       licenseComments.push(comment);
     });
 
-    // write licence comments to a separate file
+    // Écrire les commentaires de licence dans un fichier séparé
     fs.writeFileSync(`${file}.LICENSE.txt`, licenseComments.join('\r\n'));
 
-    // remove comments from css file
+    // Supprimer les commentaires du fichier CSS
     fs.writeFileSync(file, content.replace(/\/\*![^*]*\*+([^\/*][^*]*\*+)*\//g, ''));
   }
 }
 
+// Plugin custom pour traiter les licences CSS
+class CssLicenseExtractorPlugin {
+  constructor(options = {}) {
+    this.options = {
+      // Pattern pour identifier les commentaires de licence
+      licensePattern: /\/\*![^*]*\*+([^\/*][^*]*\*+)*\//g,
+      // Extension pour les fichiers de licence
+      licenseExtension: '.LICENSE.txt',
+      // Seulement en production par défaut
+      extractInDev: false,
+      // Log des actions
+      verbose: true,
+      ...options
+    };
+  }
+
+  apply(compiler) {
+    compiler.hooks.afterEmit.tap('CssLicenseExtractorPlugin', (compilation) => {
+      // Skip en développement si pas demandé
+      if (isDevelopment && !this.options.extractInDev) {
+        return;
+      }
+
+      Object.keys(compilation.assets).forEach(assetName => {
+        if (assetName.endsWith('.css')) {
+          const assetPath = path.join(compilation.outputOptions.path, assetName);
+
+          if (fs.existsSync(assetPath)) {
+            this.extractLicences(assetPath, assetName);
+          }
+        }
+      });
+    });
+  }
+
+  extractLicences(filePath, fileName) {
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
+      const comments = content.match(this.options.licensePattern);
+
+      if (comments && comments.length > 0) {
+        const licenseFile = filePath + this.options.licenseExtension;
+
+        // Écrire les licences
+        fs.writeFileSync(licenseFile, comments.join('\r\n'));
+
+        // Nettoyer le CSS
+        const cleanedContent = content.replace(this.options.licensePattern, '');
+        fs.writeFileSync(filePath, cleanedContent);
+
+        if (this.options.verbose) {
+          console.log(`📄 ${comments.length} licence(s) extraite(s) pour: ${fileName}`);
+        }
+      }
+    } catch (error) {
+      console.error(`❌ Erreur lors de l'extraction des licences pour ${fileName}:`, error);
+    }
+  }
+}
+
 module.exports = {
-  mode: 'production',
-  devtool: 'source-map',
-  watch: true,
-  stats: 'errors-only',
-  performance: {
-    hints: false,
-  },
-  optimization: {
-    usedExports: true,
-  },
-  cache: { type: 'filesystem' },
+  mode: isDevelopment ? 'development' : 'production',
+
   entry: {
-    ...Object.fromEntries(
-      glob.sync('./views/ts/*.ts').map(file => [
-        `js/${path.relative('./views/ts', file).replace(/\\/g, '/').replace(/\\.ts$/, '')}`,
-        `./${file}`
-      ])
-    ),
-    ...Object.fromEntries(
-      glob.sync('./views/scss/[^_]*.scss').map(file => [
-        `css/${path.relative('./views/scss', file).replace(/\\/g, '/').replace(/\\.scss$/, '')}`,
-        `./${file}`
-      ])
-    )
+    main: './views/ts/site.ts',
+    style: './views/scss/style.scss',
+    'editor-style': './views/scss/editor-style.scss',
   },
+
   output: {
-    filename: (pathData) => {
-      const ext = path.extname(pathData.chunk.name);
-      const name = pathData.chunk.name.replace(/\.(scss|ts)$/, '');
-      return ext === '.ts' ? `${name}-v${version}.min.js` : `${name}-v${version}.min.js`;
-    },
     path: path.resolve(__dirname, 'dist'),
-    clean: true,
+    filename: 'js/[name]-v' + version + '.js',
+    chunkFilename: 'js/[name]-v' + version + '.chunk.js',
+    publicPath: '/wp-content/themes/your-theme-name/dist/',
+    clean: true
   },
+
+  // Source maps optimisés
+  devtool: isDevelopment ? 'eval-cheap-module-source-map' : 'source-map',
+
+  resolve: {
+    extensions: ['.ts', '.js', '.scss', '.css'],
+    alias: {
+      '@': path.resolve(__dirname, 'views'),
+      '@ts': path.resolve(__dirname, 'views/ts'),
+      '@scss': path.resolve(__dirname, 'views/scss'),
+      '@components': path.resolve(__dirname, 'views/ts/components'),
+      '@modules': path.resolve(__dirname, 'views/ts/modules')
+    }
+  },
+
   module: {
     rules: [
+      // TypeScript
       {
-        test: /\.ts$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
+        test: /\.tsx?$/,
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: isDevelopment, // Plus rapide en dev
+              configFile: 'tsconfig.json'
+            }
+          }
+        ],
+        exclude: /node_modules/
       },
+
+      // SCSS/CSS avec optimisations
       {
-        test: /\.scss$/,
+        test: /\.(scss|sass|css)$/,
         use: [
           MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
-              url: false,
-            },
+              sourceMap: true,
+              importLoaders: 2
+            }
           },
           {
             loader: 'postcss-loader',
             options: {
+              sourceMap: true,
               postcssOptions: {
                 plugins: [
-                  require('autoprefixer')(),
-                ],
-              },
-            },
+                  ['autoprefixer'],
+                  ...(isDevelopment ? [] : [['cssnano', { preset: 'default' }]])
+                ]
+              }
+            }
           },
-          'sass-loader',
-        ],
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+              sassOptions: {
+                outputStyle: isDevelopment ? 'expanded' : 'compressed',
+                includePaths: ['node_modules']
+              }
+            }
+          }
+        ]
       },
-    ],
+
+      // Images optimisées (Asset Modules)
+      {
+        test: /\.(png|jpe?g|gif|svg|webp)$/i,
+        type: 'asset',
+        generator: {
+          filename: 'images/[name].[ext]'
+        }
+      },
+
+      // Fonts
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[ext]'
+        }
+      }
+    ]
   },
-  resolve: {
-    extensions: ['.ts', '.js'],
-  },
+
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: `[name].css`,
+    // Barre de progression stylée
+    new WebpackBar({
+      name: 'Hanako WP',
+      color: '#667eea'
     }),
+
+    // Copie des assets statiques
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'views/assets',
+          from: 'views/assets/',
           to: 'assets',
-          noErrorOnMissing: true,
+          noErrorOnMissing: true
         },
-      ],
+        // Ajoute d'autres dossiers d'assets si besoin
+      ]
     }),
-    new EventHooksPlugin({
-      'invalid': () => {
-        console.log('\r\n');
-        console.log(`> recompile: ${(new Date()).toLocaleTimeString()}`);
-      },
-      'done': (stats) => {
-        const time = stats.compilation.endTime - stats.compilation.startTime;
 
-        console.log(`> \x1b[32m${time}ms\x1b[0m`);
-        Object.entries(stats.compilation.assets).forEach(asset => {
+    // Extraction CSS
+    new MiniCssExtractPlugin({
+      filename: 'css/[name]-v' + version + '.css',
+      chunkFilename: 'css/[name]-v' + version + '.chunk.css'
+    }),
 
-          try {
-            // if path contain css but file has .js extension, remove it
-            if (path.extname(asset[0]) == '.js' && asset[0].includes('css')) fs.unlinkSync(path.resolve(__dirname, 'dist', asset[0]));
+    // Extracteur de licences CSS custom
+    new CssLicenseExtractorPlugin({
+      extractInDev: true,
+      verbose: true
+    }),
 
-            // if file has .scss.css.map extension, remove it
-            if (path.extname(asset[0]) == '.map' && asset[0].includes('.scss.css')) fs.unlinkSync(path.resolve(__dirname, 'dist', asset[0]));
+    // Manifeste des assets
+    new WebpackManifestPlugin({
+      fileName: 'manifest.json',
+      publicPath: '',
+      writeToFileEmit: true
+    }),
 
-            // if file has .scss.css extension, rename it to .css
-            if (path.extname(asset[0]) == '.css' && asset[0].includes('.scss.css')) fs.renameSync(path.resolve(__dirname, 'dist', asset[0]), path.resolve(__dirname, 'dist', asset[0].replace('.scss.css', `-v${version}.min.css`)));
-
-            // if file has .css extension, call extractLicenceComments on previously renamed file
-            if (path.extname(asset[0]) == '.css') extractLicenceComments(path.resolve(__dirname, 'dist', asset[0].replace('.scss.css', `-v${version}.min.css`)));
-          } catch (e) { }
-        });
-      }
+    // Nettoyage du dossier dist
+    new CleanWebpackPlugin({
+      cleanStaleWebpackAssets: false
     })
   ],
+
   optimization: {
-    minimize: true,
+    // Minimization
+    minimize: !isDevelopment,
     minimizer: [
-      new TerserPlugin(),
-      new CssMinimizerPlugin({
-        minimizerOptions: {
-          preset: ['default', { discardComments: { removeAll: false } }],
-        },
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: !isDevelopment
+          }
+        }
       }),
+      new CssMinimizerPlugin()
     ],
+
+    // Code splitting intelligent
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        // Vendors (node_modules)
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          priority: 20
+        },
+        // Bootstrap séparé
+        bootstrap: {
+          test: /[\\/]node_modules[\\/]bootstrap[\\/]/,
+          name: 'bootstrap',
+          chunks: 'all',
+          priority: 30
+        },
+        // Hanako-ts séparé
+        hanako: {
+          test: /[\\/]node_modules[\\/]hanako-ts[\\/]/,
+          name: 'hanako',
+          chunks: 'all',
+          priority: 40
+        }
+      }
+    },
+
+    // Runtime chunk séparé pour un meilleur cache
+    runtimeChunk: {
+      name: 'runtime'
+    }
   },
+
+  // Cache pour des builds plus rapides
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      config: [__filename]
+    }
+  },
+
+  // Stats pour des logs plus propres
+  stats: 'errors-only',
 };

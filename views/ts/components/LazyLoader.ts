@@ -35,7 +35,7 @@ export class LazyLoader extends Component {
 
     LazyLoader.backgroundImages.each((image: Collection) => {
       if (image.viewportPosition().y < $(window).height() + LazyLoader.tolerence && image.data('backgroundLoaded') != 'true') {
-        image.css('background-image', 'url(\'' + image.data('hwBackgroundImage') + '\')');
+        image.css('background-image', "url('" + image.data('hwBackgroundImage') + "')");
         image.data('backgroundLoaded', 'true');
       }
     });

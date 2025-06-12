@@ -1,4 +1,4 @@
-// Replace text color
+/* Replace text color */
 $utilities: map-merge(
   $utilities,
   (
@@ -22,14 +22,16 @@ $utilities: map-merge(
         'text-opacity': 1
       ),
       values: map-merge(
-        $utilities-text-colors,
-        (
-          'muted': $text-muted,
-          'black-50': rgba($black, .5), // deprecated
-          'white-50': rgba($white, .5), // deprecated
-          'reset': inherit,
+          $utilities-text-colors,
+          (
+            'muted': $text-muted,
+            'black-50': rgba($black, 0.5),
+            // deprecated
+            'white-50': rgba($white, 0.5),
+            // deprecated
+            'reset': inherit
+          )
         )
-      )
     )
   )
 );

@@ -37,6 +37,7 @@ function get_abb_option($key) {
 
 include_once('panel.php');
 include_once('frontend.php');
+include_once('webpack-assets.php');
 include_once('backend.php');
 include_once('tinymce.php');
 

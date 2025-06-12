@@ -1,10 +1,10 @@
-import { Collection } from "hanako-ts/dist-legacy/Collection";
+import { Collection } from 'hanako-ts/dist-legacy/Collection';
 import { EventManager } from 'hanako-ts/dist-legacy/Tools/EventManager';
-import { Elem, Selector, EventCallback} from 'hanako-ts/dist-legacy/Collection/Types';
+import { Elem, Selector, EventCallback } from 'hanako-ts/dist-legacy/Collection/Types';
 
 export class Swiper {
   private element: Collection;
-  
+
   private xDown: number;
   private yDown: number;
   private xDiff: number;
@@ -13,7 +13,7 @@ export class Swiper {
   constructor(element: Collection) {
     this.xDown = null;
     this.yDown = null;
-    this.element = typeof (element) === 'string' ? document.querySelector(element) : element;
+    this.element = typeof element === 'string' ? document.querySelector(element) : element;
 
     this.element.on('touchstart', (event: TouchEvent) => {
       this.xDown = event.touches[0].clientX;
@@ -60,9 +60,9 @@ export class Swiper {
   }
 
   private trigger(eventName: string) {
-    const event: Event = document.createEvent('HTMLEvents')
+    const event: Event = document.createEvent('HTMLEvents');
     event.initEvent(eventName, true, false);
-    
+
     this.element.get(0).dispatchEvent(event);
   }
 }

@@ -36,8 +36,8 @@ if (get_abb_option('dev_mode')) {
  * Include
  */
 $dev_suffix = (get_abb_option('dev_mode') ? '?time=' . date('U') : '');
-$abb_styles[] = ['hw-styles', get_bloginfo('template_directory') . '/dist/css/style-v' . ASSETS_VERSION . '.min.css' . $dev_suffix, false];
-$abb_scripts[] = ['hw-scripts', get_bloginfo('template_directory') . '/dist/js/site-v' . ASSETS_VERSION . '.min.js' . $dev_suffix];
+$abb_styles[] = ['hw-styles', get_bloginfo('template_directory') . '/dist/css/style-v' . ASSETS_VERSION . '.css' . $dev_suffix, false];
+//$abb_scripts[] = ['hw-scripts', get_bloginfo('template_directory') . '/dist/js/main-v' . ASSETS_VERSION . '.js' . $dev_suffix];
 
 $i = 0;
 $externals_scripts = explode("\n", get_abb_option('externals_scripts'));
